@@ -79,7 +79,7 @@ def get_filename(filepath):
 
 
 if __name__ == '__main__':
-    '''
+    
     data_list = []
     filepath = '/Users/tan/OneDrive - xiaozhubaoxian/blog/blogs/'
     filename_list = get_filename(filepath)
@@ -89,7 +89,7 @@ if __name__ == '__main__':
 
     with open('./group_data_objects.pickle','wb') as p:
         pickle.dump(data_list, p)
-    '''
+    
     with open('./group_data_objects.pickle', 'rb') as f:
         data_list = pickle.load(f)
 
@@ -100,7 +100,7 @@ if __name__ == '__main__':
 
 
 '''
-# test
+# test html and xml parser
 f = open('./blogs/3162067.female.24.Education.Cancer.xml')
 text = ''
 for line in f:
@@ -116,6 +116,7 @@ for child in root:
 
 
 '''
+# test re
 text = "i was waiting for my DESTINY.what should i do with myself,tell me o' my heartwhat should i do with myself,tell me....should i fly, with this beautiful nature.or should i play with these winds.should i try to reach the skies,or should i pray to the mother earth.what should i do with myself friendstell me....she talked in such a way,gave me dreams with thousand colours.like i stand in the middle of island,and she shows me all the love she has,my first dream , "
 p2 = re.compile('( \, )|(\,(?=[a-zA-Z]))')
 p3 = re.compile('( \. )|(\.(?=[a-zA-Z]))')

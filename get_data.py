@@ -30,7 +30,8 @@ def clean_data(filepath, filename):
 
 # Pack each instance(a instance = a blog) into a class object
 class GroupData():
-    def __init__(self, user_id, gender, age, industry, astrology, date, post):
+    def __init__(self, blog_id, user_id, gender, age, industry, astrology, date, post):
+        self.blog_id = blog_id
         self.user_id = user_id
         self.gender = gender
         self.age = age
@@ -43,7 +44,7 @@ class GroupData():
 # Deconstruct the xml file
 # Compose each instance based on the filename and content 
 # Package it into a class object and add it to a list
-def get_data(filepath, filename):
+def get_data(filepath, filename, index):
     f = open(filepath+filename)
     text = ''
     data_list = []
@@ -70,14 +71,16 @@ def get_data(filepath, filename):
 
         
         for child in root:
+            blog_id = index
             if child.tag == 'date':
                 date = child.text 
             elif child.tag == 'post':
-                data_sample = GroupData(user_id, gender, age, industry, astrology, date, child.text.strip('\n \t'))
+                data_sample = GroupData(blog_id, user_id, gender, age, industry, astrology, date, child.text.strip('\n \t'))
                 data_list.append(data_sample)
+                index += 1
     except etree.XMLSyntaxError:
         print('Error 2', filename)
-    return data_list
+    return data_list, index
 
 
 def get_filename(filepath):
@@ -88,24 +91,26 @@ def get_filename(filepath):
 
 if __name__ == '__main__':
     # Get a data list
-    '''data_lists = []
+    data_lists = []
     filepath = '/Users/tan/OneDrive - xiaozhubaoxian/blog/blogs/'
     filename_list = get_filename(filepath)
+    index = 0
     for filename in filename_list:
         #clean_data(filepath, filename)
-        data_lists += get_data('./blogs/', filename)
+        data_list, index = get_data('./blogs/', filename, index)
+        data_lists += data_list
 
     # Store the data(class object) list into a pickle file
     with open('./group_data_objects.pickle','wb') as p:
-        pickle.dump(data_lists, p)'''
+        pickle.dump(data_lists, p)
     
     # Read a pickle file
     with open('./group_data_objects.pickle', 'rb') as f:
         data_lists = pickle.load(f)
 
     # Print examples
-    for i in data_lists[:2]:
-        print(i.user_id, i.gender, i.age, i.industry, i.astrology, i.date, i.post, '\n')
+    for i in data_lists[:30]:
+        print(i.blog_id, i.user_id, i.gender, i.age, i.industry, i.astrology, i.date, i.post, '\n')
 
 
 

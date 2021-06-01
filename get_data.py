@@ -7,6 +7,7 @@ from lxml import etree
 from lxml import etree as ET2
 
 
+# Clean and rewrite the text data in each file
 def clean_data(filepath, filename):
     text = ''
     p1 = re.compile('(&nbsp;| {2,}|�|urlLink|Ã|Â|ï|¿|½|¯|¢)')
@@ -16,6 +17,7 @@ def clean_data(filepath, filename):
     p5 = re.compile('www\. (?=[a-zA-Z])')
     with open(filepath+filename, 'r', encoding='ISO-8859-1') as f:
         for line in f:
+            # uncomment base on need
             #line = p1.sub('', line)
             #line = p2.sub(', ', line)
             #line = p3.sub('. ', line)
@@ -26,6 +28,7 @@ def clean_data(filepath, filename):
         w.write(text)
 
 
+# Pack each instance(a instance = a blog) into a class object
 class GroupData():
     def __init__(self, gender, age, industry, astrology, date, post):
         self.gender = gender
@@ -36,6 +39,9 @@ class GroupData():
         self.post = post
 
 
+# Deconstruct the xml file
+# Compose each instance based on the filename and content 
+# Package it into a class object and add it to a list
 def get_data(filepath, filename):
     f = open(filepath+filename)
     text = ''
@@ -74,26 +80,29 @@ def get_data(filepath, filename):
 
 def get_filename(filepath):
     filename = os.listdir(filepath)
-    # return a list of file name
+    # Return a list of file name
     return filename
 
 
 if __name__ == '__main__':
-    
-    data_list = []
+    # Get a data list
+    data_lists = []
     filepath = '/Users/tan/OneDrive - xiaozhubaoxian/blog/blogs/'
     filename_list = get_filename(filepath)
     for filename in filename_list:
         #clean_data(filepath, filename)
-        data_list += get_data('./blogs/', filename)
+        data_lists += get_data('./blogs/', filename)
 
+    # Store the data(class object) list into a pickle file
     with open('./group_data_objects.pickle','wb') as p:
-        pickle.dump(data_list, p)
+        pickle.dump(data_lists, p)
     
+    # Read a pickle file
     with open('./group_data_objects.pickle', 'rb') as f:
-        data_list = pickle.load(f)
+        data_lists = pickle.load(f)
 
-    for i in data_list[:2]:
+    # Print examples
+    for i in data_lists[:2]:
         print(i.gender, i.age, i.industry, i.astrology, i.date, i.post, '\n')
 
 

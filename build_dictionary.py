@@ -19,7 +19,7 @@ def get_small_vocabuary(paragraph):
 
 
 def get_indexing(data_lists, voc_dic, voc2id, id2voc, posting):
-    for i in data_lists[:100]:
+    for i in data_lists:
         dic = get_small_vocabuary(i.post)
         for voc in dic:
             # Construct a vocabuary dictionary
@@ -51,35 +51,10 @@ if __name__ == '__main__':
 
     # Construct a vocabuary dictionary
     voc_dic = {}; voc2id = {'unk': -1}; id2voc = {}; posting = {}
-    voc_dic, voc2id, id2voc, posting = get_indexing(data_lists, voc_dic, voc2id, id2voc, posting)
+    voc_dic, voc2id, id2voc, posting = get_indexing(data_lists[:100], voc_dic, voc2id, id2voc, posting)
     del voc2id['unk']
 
     print('voc_dic: ', list(voc_dic.items())[:10])
     print('id2voc: ', list(id2voc.items())[:10])
     print('voc2id: ', list(voc2id.items())[:10])
     print('posting: ', list(posting.items())[:10])
-
-
-    '''
-    voc_dic = {}
-    # Construct a vocabuary dictionary
-    for i in data_lists[:100]:
-        dic = get_vocabuary(i.post)
-        voc_dic = dict(Counter(voc_dic) + Counter(dic))
-    print('Number of vocabuary: ', len(voc_dic))
-
-    # Get two vocbuary id dictionaries
-    ## {voc_id: voc}
-    id2voc = {}
-    voc_id = 0
-    for voc in voc_dic:
-        id2voc[voc_id] = voc
-        voc_id += 1
-    ## {voc: voc_id}
-    voc2id = {value:key for key, value in id2voc.items()}
-    print('Samples of vocabuary id dictionary: ', list(id2voc.items())[:10])
-    print('Samples of vocabuary id dictionary: ', list(voc2id.items())[:10])
-    '''
-
-    
-    

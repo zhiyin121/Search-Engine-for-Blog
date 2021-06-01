@@ -54,8 +54,9 @@ if __name__ == '__main__':
     voc_dic, voc2id, id2voc, posting = get_indexing(data_lists[:100], voc_dic, voc2id, id2voc, posting)
     del voc2id['unk']
 
+    # Print
     print('voc_dic: ', list(voc_dic.items())[:10])
     print('id2voc: ', list(id2voc.items())[:10])
     print('voc2id: ', list(voc2id.items())[:10])
     print('posting: ', list(posting.items())[:10])
-    
+

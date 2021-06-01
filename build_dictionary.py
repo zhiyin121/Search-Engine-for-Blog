@@ -59,4 +59,7 @@ if __name__ == '__main__':
     print('id2voc: ', list(id2voc.items())[:10])
     print('voc2id: ', list(voc2id.items())[:10])
     print('posting: ', list(posting.items())[:10])
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/master

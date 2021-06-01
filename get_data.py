@@ -30,7 +30,8 @@ def clean_data(filepath, filename):
 
 # Pack each instance(a instance = a blog) into a class object
 class GroupData():
-    def __init__(self, gender, age, industry, astrology, date, post):
+    def __init__(self, user_id, gender, age, industry, astrology, date, post):
+        self.user_id = user_id
         self.gender = gender
         self.age = age
         self.industry = industry
@@ -61,17 +62,18 @@ def get_data(filepath, filename):
         #root = tree.getroot()
 
         info = filename.split('.')
-        gender = info[0]
-        age = info[1]
-        industry = info[2]
-        astrology = info[3]
+        user_id = info[0]
+        gender = info[1]
+        age = info[2]
+        industry = info[3]
+        astrology = info[4]
 
         
         for child in root:
             if child.tag == 'date':
                 date = child.text 
             elif child.tag == 'post':
-                data_sample = GroupData(gender, age, industry, astrology, date, child.text.strip('\n \t'))
+                data_sample = GroupData(user_id, gender, age, industry, astrology, date, child.text.strip('\n \t'))
                 data_list.append(data_sample)
     except etree.XMLSyntaxError:
         print('Error 2', filename)
@@ -86,7 +88,7 @@ def get_filename(filepath):
 
 if __name__ == '__main__':
     # Get a data list
-    data_lists = []
+    '''data_lists = []
     filepath = '/Users/tan/OneDrive - xiaozhubaoxian/blog/blogs/'
     filename_list = get_filename(filepath)
     for filename in filename_list:
@@ -95,7 +97,7 @@ if __name__ == '__main__':
 
     # Store the data(class object) list into a pickle file
     with open('./group_data_objects.pickle','wb') as p:
-        pickle.dump(data_lists, p)
+        pickle.dump(data_lists, p)'''
     
     # Read a pickle file
     with open('./group_data_objects.pickle', 'rb') as f:
@@ -103,7 +105,7 @@ if __name__ == '__main__':
 
     # Print examples
     for i in data_lists[:2]:
-        print(i.gender, i.age, i.industry, i.astrology, i.date, i.post, '\n')
+        print(i.user_id, i.gender, i.age, i.industry, i.astrology, i.date, i.post, '\n')
 
 
 

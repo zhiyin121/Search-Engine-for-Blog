@@ -2,6 +2,7 @@ from get_data import GroupData, get_filename, clean_data, get_data
 from build_dictionary import get_indexing
 from analysis_query import clean_query, AugmentedQuery
 
+import os
 import pickle
 
 
@@ -43,7 +44,8 @@ if __name__ == '__main__':
     filepath = '/Users/tan/OneDrive - xiaozhubaoxian/blog/blogs/'
     local_filepath = './blogs/'
     pickle_path = './group_data_objects.pickle'
-    #engine.load_corpus(filepath, local_filepath, pickle_path)
+    if not os.path.isfile("group_data_objects.pickle"):
+        engine.load_corpus(filepath, local_filepath, pickle_path)
     engine.build_dictionary(pickle_path)
     # Processing query
     query = 'who like cute cats?'

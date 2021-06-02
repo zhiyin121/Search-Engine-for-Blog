@@ -2,10 +2,7 @@ from get_data import GroupData, get_filename, clean_data, get_data
 from build_dictionary import get_indexing
 from analysis_query import clean_query, AugmentedQuery
 
-<<<<<<< HEAD
 import os
-=======
->>>>>>> c9b7dcb3019ba9f69ab5ade1ff9a18b2be84c76d
 import pickle
 
 

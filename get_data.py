@@ -2,27 +2,27 @@ import os
 import html
 import re
 import pickle
-import xml.etree.ElementTree as ET
 from lxml import etree
 from lxml import etree as ET2
+#import xml.etree.ElementTree as ET
 
 
 # Clean and rewrite the text data in each file
 def clean_data(filepath, filename):
-    text = ''
-    p1 = re.compile('(&nbsp;| {2,}|�|urlLink|Ã|Â|ï|¿|½|¯|¢)')
-    p2 = re.compile('( \, )|(\,(?=[a-zA-Z]))')
-    p3 = re.compile('( \. )|(\.(?=[a-zA-Z]))')
-    p4 = re.compile('\. com(?=[^a-zA-Z])')
-    p5 = re.compile('www\. (?=[a-zA-Z])')
+    text = '' 
+    p1 = re.compile('( \, )|(\,(?=[a-zA-Z]))')
+    p2 = re.compile('( \. )|(\.(?=[a-zA-Z]))')
+    p3 = re.compile('\. com(?=[^a-zA-Z])')
+    p4 = re.compile('www\. (?=[a-zA-Z])')
+    p5 = re.compile('(&nbsp;| {2,}|�|urlLink|Ã|Â|ï|¿|½|¯|¢)')
     with open(filepath+filename, 'r', encoding='ISO-8859-1') as f:
         for line in f:
             # uncomment base on need
-            #line = p1.sub('', line)
-            #line = p2.sub(', ', line)
-            #line = p3.sub('. ', line)
-            #line = p4.sub('.com', line)
-            #line = p5.sub('www.', line)
+            line = p1.sub(', ', line)
+            line = p2.sub('. ', line)
+            line = p3.sub('.com', line)
+            line = p4.sub('www.', line)
+            line = p5.sub('', line)
             text += line
     with open(filepath+filename, 'w', encoding='utf-8') as w:
         w.write(text)
@@ -39,6 +39,13 @@ class GroupData():
         self.astrology = astrology
         self.date = date
         self.post = post
+
+
+# Get file name list from corpus blogs
+def get_filename(filepath):
+    filename = os.listdir(filepath)
+    # Return a list of file name
+    return filename
 
 
 # Deconstruct the xml file
@@ -81,12 +88,6 @@ def get_data(filepath, filename, index):
     except etree.XMLSyntaxError:
         print('Error 2', filename)
     return data_list, index
-
-
-def get_filename(filepath):
-    filename = os.listdir(filepath)
-    # Return a list of file name
-    return filename
 
 
 if __name__ == '__main__':

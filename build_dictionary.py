@@ -3,6 +3,7 @@ from get_data import GroupData
 import pickle
 from collections import Counter
 import spacy
+
 nlp = spacy.load("en_core_web_sm")
 lemmatizer = nlp.get_pipe("lemmatizer")
 

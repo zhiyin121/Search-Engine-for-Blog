@@ -9,41 +9,52 @@ import spacy
 nlp = spacy.load("en_core_web_sm")
 lemmatizer = nlp.get_pipe("lemmatizer")
 
-
+regard_ent_type = ['LANGUAGE','DATE', 'TIME','MONEY','QUANTITY', 'ORDINAL', 'CARDINAL']
 # Tokenize and lemmatize the sentence, while keeping the name entity phrase as an item
 def tokenizer(sentence):
     doc = nlp(sentence)
     entities_atr = {}
-    entities_dic = {}
+    entities_phrase_dic = {}
     for ent in doc.ents:
-        entities_atr[ent.text] = ent.label_
-        entities_dic[ent.text] = 0
+        if ent.label_ not in regard_ent_type: 
+            entities_atr[ent.text] = ent.label_
+            if ' ' in ent.text:
+                entities_phrase_dic[ent.text] = 0
 
     org_tokens_list = []
     for token in doc:
         org_tokens_list.append(token.text)
     #print(org_tokens_list)
 
-    new_tokens_list = []
     for index in range(len(org_tokens_list)):
-        for name in entities_dic:
+        for name in entities_phrase_dic:
             if ' ' in name:
                 name_list = name.split(' ')
             else:
                 name_list = [name]
-            if org_tokens_list[index] == name_list[0]:
-                entities_dic[name] = (index, index + len(name_list))
+            if org_tokens_list[index:index+len(name_list)] == name_list:
+                #print(org_tokens_list[index:index+len(name_list)])
+                #print(name_list)
+                entities_phrase_dic[name] = (index, index + len(name_list))
     #print(entities_dic)
 
     with doc.retokenize() as retokenizer:
-        for name in entities_dic:
-            if entities_dic[name] != 0:
-                retokenizer.merge(doc[entities_dic[name][0]:entities_dic[name][1]], attrs={"LEMMA": name.lower()})
+        for name in entities_phrase_dic:
+            if entities_phrase_dic[name] != 0:
+                spans = doc[entities_phrase_dic[name][0]:entities_phrase_dic[name][1]]
+                #filtered = spacy.util.filter_spans(spans)
+                try:
+                    retokenizer.merge(spans, attrs={"LEMMA": name.lower()})
+                except ValueError:
+                    pass
+
+    new_tokens_list = []
     for token in doc:
-        new_tokens_list.append(token.lemma_) # or token.text
+        if token.pos_ != 'SPACE':
+            new_tokens_list.append(token.lemma_.lower()) # or token.text
     #print(new_tokens_list)
 
-    return new_tokens_list, entities_atr
+    return new_tokens_list #, entities_atr
 
 
 # Pack each instance(a instance = a blog) into a class object
@@ -128,17 +139,16 @@ def get_data(filepath, index):
 
 
 if __name__ == '__main__':
-    
     filepath = '/Users/tan/OneDrive - xiaozhubaoxian/blog/blogs/'
     index = 0
-    get_data(filepath, index)
+    #get_data(filepath, index)
     
     # Read a pickle file
     with open('./group_data_objects.pickle', 'rb') as f:
         data_lists = pickle.load(f)
 
     # Print examples
-    for i in data_lists[:2]:
+    for i in data_lists[:3]:
         #print(i.blog_id, i.user_id, i.gender, i.age, i.industry, i.astrology, i.date, i.post, '\n')
         print(tokenizer(i.post))
     

@@ -5,31 +5,49 @@ import pickle
 from lxml import etree
 from lxml import etree as ET2
 #import xml.etree.ElementTree as ET
+import spacy
+nlp = spacy.load("en_core_web_sm")
+lemmatizer = nlp.get_pipe("lemmatizer")
 
 
-# Clean and rewrite the text data in each file
-def clean_data(filepath, filename):
-    text = '' 
-    p1 = re.compile('( \, )|(\,(?=[a-zA-Z]))')
-    p2 = re.compile('( \. )|(\.(?=[a-zA-Z]))')
-    p3 = re.compile('\. com(?=[^a-zA-Z])')
-    p4 = re.compile('www\. (?=[a-zA-Z])')
-    p5 = re.compile('(&nbsp;| {2,}|�|urlLink|Ã|Â|ï|¿|½|¯|¢)')
-    with open(filepath+filename, 'r', encoding='ISO-8859-1') as f:
-        for line in f:
-            # uncomment base on need
-            line = p1.sub(', ', line)
-            line = p2.sub('. ', line)
-            line = p3.sub('.com', line)
-            line = p4.sub('www.', line)
-            line = p5.sub('', line)
-            text += line
-    with open(filepath+filename, 'w', encoding='utf-8') as w:
-        w.write(text)
+# Tokenize and lemmatize the sentence, while keeping the name entity phrase as an item
+def tokenizer(sentence):
+    doc = nlp(sentence)
+    entities_atr = {}
+    entities_dic = {}
+    for ent in doc.ents:
+        entities_atr[ent.text] = ent.label_
+        entities_dic[ent.text] = 0
+
+    org_tokens_list = []
+    for token in doc:
+        org_tokens_list.append(token.text)
+    #print(org_tokens_list)
+
+    new_tokens_list = []
+    for index in range(len(org_tokens_list)):
+        for name in entities_dic:
+            if ' ' in name:
+                name_list = name.split(' ')
+            else:
+                name_list = [name]
+            if org_tokens_list[index] == name_list[0]:
+                entities_dic[name] = (index, index + len(name_list))
+    #print(entities_dic)
+
+    with doc.retokenize() as retokenizer:
+        for name in entities_dic:
+            if entities_dic[name] != 0:
+                retokenizer.merge(doc[entities_dic[name][0]:entities_dic[name][1]], attrs={"LEMMA": name.lower()})
+    for token in doc:
+        new_tokens_list.append(token.lemma_) # or token.text
+    #print(new_tokens_list)
+
+    return new_tokens_list, entities_atr
 
 
 # Pack each instance(a instance = a blog) into a class object
-class GroupData():
+class GroupData:
     def __init__(self, blog_id, user_id, gender, age, industry, astrology, date, post):
         self.blog_id = blog_id
         self.user_id = user_id
@@ -43,24 +61,24 @@ class GroupData():
 
 # Get file name list from corpus blogs
 def get_filename(filepath):
-    filename = os.listdir(filepath)
+    filename_list = os.listdir(filepath)
     # Return a list of file name
-    return filename
+    return filename_list
 
 
 # Deconstruct the xml file
 # Compose each instance based on the filename and content 
 # Package it into a class object and add it to a list
-def get_data(filepath, filename, index):
-    f = open(filepath+filename)
-    text = ''
+def get_one_file(filepath, filename, index):
     data_list = []
-    try:
-        for line in f:
-            line = html.unescape(line)
-            text += line
-    except UnicodeDecodeError:
-        print('Error 1', filename)
+    text = ''
+    with open(filepath+filename, 'r', encoding='ISO-8859-1') as f:
+        try:
+            for line in f:
+                line = html.unescape(line)
+                text += line
+        except UnicodeDecodeError:
+            print('Error 1', filename)
         
     #print(text)
     #root = ET.fromstring(text)
@@ -76,7 +94,6 @@ def get_data(filepath, filename, index):
         industry = info[3]
         astrology = info[4]
 
-        
         for child in root:
             blog_id = index
             if child.tag == 'date':
@@ -87,50 +104,68 @@ def get_data(filepath, filename, index):
                 index += 1
     except etree.XMLSyntaxError:
         print('Error 2', filename)
+
     return data_list, index
 
 
-if __name__ == '__main__':
+def get_data(filepath, index):
     # Get a data list
     data_lists = []
-    filepath = '/Users/tan/OneDrive - xiaozhubaoxian/blog/blogs/'
     filename_list = get_filename(filepath)
-    index = 0
+    
     for filename in filename_list:
         #clean_data(filepath, filename)
-        data_list, index = get_data('./blogs/', filename, index)
+        data_list, index = get_one_file(filepath, filename, index)
         data_lists += data_list
 
     # Store the data(class object) list into a pickle file
     with open('./group_data_objects.pickle','wb') as p:
         pickle.dump(data_lists, p)
+
+    return data_lists
+
+    
+
+
+if __name__ == '__main__':
+    
+    filepath = '/Users/tan/OneDrive - xiaozhubaoxian/blog/blogs/'
+    index = 0
+    get_data(filepath, index)
     
     # Read a pickle file
     with open('./group_data_objects.pickle', 'rb') as f:
         data_lists = pickle.load(f)
 
     # Print examples
-    for i in data_lists[:30]:
-        print(i.blog_id, i.user_id, i.gender, i.age, i.industry, i.astrology, i.date, i.post, '\n')
-
+    for i in data_lists[:2]:
+        #print(i.blog_id, i.user_id, i.gender, i.age, i.industry, i.astrology, i.date, i.post, '\n')
+        print(tokenizer(i.post))
+    
+    
+    
 
 
 
 '''
 # test html and xml parser
-f = open('./blogs/3162067.female.24.Education.Cancer.xml')
+filepath = '/Users/tan/OneDrive - xiaozhubaoxian/blog/blogs/'
+filename = '467705.female.25.indUnk.Libra.xml'
 text = ''
-for line in f:
-    line = html.unescape(line)
-    text += line
+p5 = re.compile('(&nbsp;| {2,}|�|Ã|Â|ï|¿|½|¯|¢)')
+with open(filepath+filename, 'r', encoding='ISO-8859-1') as f:
+    for line in f:
+        line = html.unescape(line)
+        #line = p5.sub('', line)
+        text += line
 
-#print(text)
-#root = ET.fromstring(text)
-parser = ET2.XMLParser(recover=True)
-root = ET2.fromstring(text, parser=parser)
-for child in root:
-    print(child.tag, child.text)'''
-
+    #print(text)
+    #root = ET.fromstring(text)
+    parser = ET2.XMLParser(recover=True)
+    root = ET2.fromstring(text, parser=parser)
+    for child in root[:4]:
+        print(child.tag, child.text), '\n\n'
+'''
 
 '''
 # test re

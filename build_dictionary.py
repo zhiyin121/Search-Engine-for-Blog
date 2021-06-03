@@ -1,44 +1,80 @@
-from get_data import GroupData, tokenizer
+from get_data import GroupData
 
 import json
 import pickle
 from collections import Counter
-import spacy
 import time
 import string
 
+import spacy
+nlp = spacy.load("en_core_web_sm")
 spacy_stopwords = spacy.lang.en.stop_words.STOP_WORDS
 punct = set(string.punctuation)
 
-# Get vocabuary dictionary from one text
-def small_vocabuary(sentence):
-    small_voc_dic = {}
-    tokenizer_start_time = time.time()
-    tokens = tokenizer(sentence)
-    tokenizer_end_time = time.time()
-    # print('tokenizer:', tokenizer_end_time-tokenizer_start_time)
-    for token in tokens:
-        if token not in spacy_stopwords and token not in punct:
-            if token in small_voc_dic:
-                small_voc_dic[token] += 1
-            else:
-                small_voc_dic[token] = 1
-    return small_voc_dic
+
+regard_ent_type = ['LANGUAGE','DATE', 'TIME','MONEY','QUANTITY', 'ORDINAL', 'CARDINAL']
+# Tokenize and lemmatize the sentence, while keeping the name entity phrase as an item
+def tokenizer(text_list):
+    token_list = []
+    docs = nlp.pipe(text_list, disable=['tok2vec', 'parser'], n_process=30)
+    for doc in docs:
+        entities_atr = {}
+        entities_phrase_dic = {}
+        for ent in doc.ents:
+            if ent.label_ not in regard_ent_type:
+                entities_atr[ent.text] = ent.label_
+                if ' ' in ent.text:
+                    entities_phrase_dic[ent.text] = 0
+
+        org_tokens_list = []
+        for token in doc:
+            org_tokens_list.append(token.text)
+        #print(org_tokens_list)
+
+        for index in range(len(org_tokens_list)):
+            for name in entities_phrase_dic:
+                if ' ' in name:
+                    name_list = name.split(' ')
+                else:
+                    name_list = [name]
+                if org_tokens_list[index:index+len(name_list)] == name_list:
+                    #print(org_tokens_list[index:index+len(name_list)])
+                    #print(name_list)
+                    entities_phrase_dic[name] = (index, index + len(name_list))
+        #print(entities_dic)
+
+        with doc.retokenize() as retokenizer:
+            for name in entities_phrase_dic:
+                if entities_phrase_dic[name] != 0:
+                    spans = doc[entities_phrase_dic[name][0]:entities_phrase_dic[name][1]]
+                    #filtered = spacy.util.filter_spans(spans)
+                    try:
+                        retokenizer.merge(spans, attrs={"LEMMA": name.lower()})
+                    except ValueError:
+                        pass
+
+        new_tokens_list = []
+        for token in doc:
+            if token.pos_ != 'SPACE':
+                new_tokens_list.append(token.lemma_.lower()) # or token.text
+        #print(new_tokens_list)
+        token_list.append(new_tokens_list)
+
+    return token_list #, entities_atr
 
 
 # Get vocabuary dictionary from the corpus
 def vocabuary(data_lists):
     voc_dic = {}
-    for i in data_lists:
-        small_vocabuary_start_time = time.time()
-        small_voc_dic = small_vocabuary(i.post)
-        small_vocabuary_end_time = time.time()
-        # print('small_vocabuary:', small_vocabuary_end_time-small_vocabuary_start_time)
-        for voc,counts in small_voc_dic.items():
-            if voc in voc_dic:
-                voc_dic[voc] += counts
-            else:
-                voc_dic[voc] = counts
+    text_list = [i.post for i in data_lists]
+    doc = tokenizer(text_list)
+    for tokens in doc:
+        for token in tokens:
+            if token not in spacy_stopwords and token not in punct:
+                if token in voc_dic:
+                    voc_dic[token] += 1
+                else:
+                    voc_dic[token] = 1
     with open("vocabuary_dictionary.json",'w') as v:
         json.dump(voc_dic,v)
     return voc_dic

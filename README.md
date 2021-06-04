@@ -18,17 +18,18 @@
 * Enter a query
 ```
   -> Query example:
-     #1 New York           --- (Sensitive to named entities)
+     #1 New York           --- (sensitive to named entities)
      #2 I'm not happy      --- (understand adjective phrases modified by 'not')
      #3 apple slow         --- (ambiguity)
      #4 apple pie          --- (ambiguity)
+     #5 Americam           --- (auto correct typo)
 
   -> What do you search for:
      New York
 ```
 * Output
 ```
-  -> Lodaing...
+  -> Loading...
   -> Ranking...
   -> Soon to return results...
   

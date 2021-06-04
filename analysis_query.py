@@ -1,7 +1,6 @@
 from get_data import GroupData
-from build_dictionary import tokenizer
 
-import pickle
+from itertools import product
 from spellchecker import SpellChecker
 spell = SpellChecker()
 
@@ -15,15 +14,46 @@ spacy_stopwords = spacy.lang.en.stop_words.STOP_WORDS
 
 def spelling_correction(query_list):
     corrected_query = []
-    # Spelling correction
+    # Spelling correction: Yes or No?
     for token in query_list:
         correct = spell.correction(token)
         if correct:
             corrected_query.append(correct)
         else:
             corrected_query.append(token)
-    return corrected_query
-
+    if query_list != corrected_query:
+        print('Do you mean "' + ' '.join(corrected_query) + '"?')
+        chose = input("Except the change?(enter:y/n)  |  Additional options(enter:add)\n")
+        if chose == 'y':
+            return corrected_query
+        elif chose == 'n':
+            print("Remind: this may cause no results returned.")
+            return query_list
+        elif chose == 'add':
+            candidate_token_list = []
+            candidates_list = []
+            for token in query_list:
+                token_candidate = []
+                correct = spell.candidates(token)
+                if correct:
+                    token_candidate = correct
+                else:
+                    token_candidate.append(token)
+                candidate_token_list.append(token_candidate)
+            for i in product(*candidate_token_list):
+                candidates_list.append(list(i))
+            index = 0
+            candidates_dic = {}
+            for c in candidates_list:
+                candidates_dic[index] = c
+                index += 1
+            print(candidates_dic)
+            chose_add = input("choose one candidates or keep the original?(enter:number/i)\n")
+            return candidates_dic[int(chose_add)]
+    else:
+        return query_list
+    
+#print(spelling_correction(['amercam', 'peoplo']))
 
 class AugmentedQuery:
     def __init__(self, query_list):
@@ -181,6 +211,7 @@ if __name__ == '__main__':
     for i in data_lists[:2]:
         print(i.blog_id, i.user_id, i.gender, i.age, i.industry, i.astrology, i.date, i.post, '\n')'''
 
+    '''
     #query = ['I\'m not hapyy, but he doesn\'t know.']
     query = ['New York but not Manhattan']
     tokenized_query = tokenizer(query)[0]
@@ -188,17 +219,7 @@ if __name__ == '__main__':
     e = AugmentedQuery(tokenized_query)
     augment_obj = e.augment_query()
     print(augment_obj.antonyms_set)
-
-
-    #print(get_hyponyms('emotion'))
-
     '''
-    post_num = 0
-    for i in data_lists:
-        n = 0
-        for word in tokens:
-            if word in i.post:
-                n += 1
-        if n == len(tokens):
-            post_num += 1
-    print(post_num)'''
+
+    
+    

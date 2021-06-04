@@ -1,6 +1,6 @@
 from get_data import GroupData
 from build_dictionary import tokenizer
-from analysis_query import clean_query, AugmentedQuery
+from analysis_query import spelling_correction, AugmentedQuery
 
 # import os
 import copy
@@ -22,7 +22,8 @@ class Score:
     def simularity_score(self, query):
         # Processing query
         query_list = tokenizer([query])[0]
-        augment = AugmentedQuery(query_list)
+        spell_corrected = spelling_correction(query_list)
+        augment = AugmentedQuery(spell_corrected)
         augment_obj = augment.augment_query()
         # augment_obj. + synonyms_set, definition_set, hyponyms_set, 
         # augment_obj. + hypernyms_set, antonyms_set, not_phrase_set, delete_set

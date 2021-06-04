@@ -26,12 +26,12 @@ def tokenizer(text_list, as_tuple=False):
         doc_tuples = nlp.pipe(text_list, disable=['tok2vec', 'parser'], n_process=127, as_tuples=True, batch_size=3000)
         docs = []
         for doc, context in doc_tuples:
-            print(context["blog_id"], len(text_list))
+            #print(context["blog_id"], len(text_list))
             doc._.text_id = context["blog_id"]
             docs.append(doc)
     i = 0
     for doc in docs:
-        print(i, len(text_list))
+        #print(i, len(text_list))
         i += 1
         entities_atr = {}
         entities_phrase_dic = {}

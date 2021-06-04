@@ -4,11 +4,12 @@ from get_simularity import Score
 from dp_similarity import SentenceTransformers
 
 import os
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
 import pickle
 
 import nltk
-nltk.download('wordnet')
-
+# nltk.download('wordnet')
+import numpy as np
 
 class SearchEngine:
     def __init__(self):
@@ -37,28 +38,35 @@ if __name__ == '__main__':
     if not os.path.isfile("group_data_objects.pickle"):
         engine.load_corpus(filepath, local_filepath, pickle_path)
 
+    re_score = SentenceTransformers()
+    with open('./group_data_objects.pickle', 'rb') as f:
+        data_lists = pickle.load(f)
+    score = Score()
     # input query
     print('Query example:\n')
     print(' #1 New York \t(Sensitive to named entities)')
     print(' #2 I\'m not happy \t(Understand adjective phrases modified by \'not\')')
-    print(' #3 apple slow \t(Ambiguity)\n #4 apple pie \t(Ambiguity)\n')
-    print('What do you search for:')
-
-    re_score = SentenceTransformers()
-    with open('./group_data_objects.pickle', 'rb') as f:
-        data_lists = pickle.load(f)
-
+    print(' #3 apple slow \t(Ambiguity)\n #4 apple pie \t(Ambiguity)')
+    print(' #5 Americam \t(Auto correct typo)\n')
+    
     while True:
+        print('What do you search for:')
         query = input()
         # Compute simularity score
-        print('\nLodaing...')
-        score = Score()
+        print('\nLoading...')
+        
         query_score_dic, related_score_dic, all_score_dic = score.simularity_score(query)
-        top_100 = sorted(all_score_dic.items(),key=lambda item:item[1],reverse=True)[:100]  # [(blog_id, score)]
+
+        all_score_tuple = list(all_score_dic.items())
+        all_score = np.array([i[1] for i in all_score_tuple])
+        top_100_index = all_score.argpartition(-100)[-100:]
+        #top_100 = sorted(all_score_dic.items(),key=lambda item:item[1],reverse=True)[:100]  # [(blog_id, score)]
         #print(top_100)
+        top_100 = [all_score_tuple[i] for i in top_100_index]
         # Resort by vector similarity
         
         print('Ranking...')
+        round = 0
         resort_dic = {}
         for doc in top_100:
             doc_id = doc[0] 
@@ -67,9 +75,15 @@ if __name__ == '__main__':
                     document = i.post
                     result = re_score.get_scores(query, document)
                     resort_dic[doc_id] = result
+            round += 1
+            if round == len(top_100)/2:
+                print('Ready to return results...\n')
         #print(resort_top_100)
-        print('Soon to return results...')
-        resort_top_100 = sorted(resort_dic.items(),key=lambda item:item[1],reverse=True)[:100]  # [(blog_id, score)]
+        resort_dic_tuple = list(resort_dic.items())
+        resort_score = np.array([i[1] for i in resort_dic_tuple])
+        resort_top_100_index = resort_score.argpartition(-100)[-100:]
+        resort_top_100 = [all_score_tuple[i] for i in resort_top_100_index]
+        # resort_top_100 = sorted(resort_dic.items(),key=lambda item:item[1],reverse=True)[:100]  # [(blog_id, score)]
         for doc in resort_top_100[:10]:
             doc_id = doc[0]
             for i in data_lists:

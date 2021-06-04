@@ -13,22 +13,16 @@ from nltk.corpus import wordnet
 # from negspacy.negation import Negex # negate name entity
 spacy_stopwords = spacy.lang.en.stop_words.STOP_WORDS
 
-def clean_query(query):
-    # Lemalization and lower case
-    cleaned_query = []
-    pos_list = []
-    doc = nlp(query)
-    for token in doc:
-        # Get the corresponding lemma and POS
-        lemma = token.lemma_.lower()
-        pos_list.append(token.pos_)
-        # Spelling correction
-        correct = spell.correction(lemma)
+def spelling_correction(query_list):
+    corrected_query = []
+    # Spelling correction
+    for token in query_list:
+        correct = spell.correction(token)
         if correct:
-            cleaned_query.append(correct)
+            corrected_query.append(correct)
         else:
-            cleaned_query.append(lemma)
-    return cleaned_query
+            corrected_query.append(token)
+    return corrected_query
 
 
 class AugmentedQuery:

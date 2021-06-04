@@ -8,7 +8,7 @@
 ## Usage
 * Download the whole package
 * Download the [Blog Corpus](https://u.cs.biu.ac.il/~koppel/BlogCorpus.htm), unzip it and place it in the package file path
-* Download the Pre-loaded [documents](), unzip it and place it in the package file path
+* Download the Pre-loaded [documents](https://xiaozhubaoxian-my.sharepoint.com/:u:/g/personal/tan_ms_hellseed_eu/ESlEak6Z_HlAqr3uEH17O6YB3gUdpbTeqLDxXNxV_PYhKQ?e=VxFPmI), unzip it and place it in the package file path
 * Run the code in the package file location
 ```
   -> python main.py

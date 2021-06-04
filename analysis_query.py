@@ -8,11 +8,9 @@ spell = SpellChecker()
 import spacy
 nlp = spacy.load("en_core_web_sm")
 
-import nltk
-# nltk.download('wordnet')
 from nltk.corpus import wordnet
-from gensim.models import KeyedVectors
-from negspacy.negation import Negex # negate name entity
+# from gensim.models import KeyedVectors
+# from negspacy.negation import Negex # negate name entity
 spacy_stopwords = spacy.lang.en.stop_words.STOP_WORDS
 
 def clean_query(query):
@@ -37,7 +35,7 @@ class AugmentedQuery:
     def __init__(self, query_list):
         self.query_list = query_list
         #self.wiki = KeyedVectors.load_word2vec_format(wiki_path, limit=999999)
-        nltk.download('wordnet')
+        
 
     # Get synonyms set of a word from the corpus WordNet
     def get_synonyms(self, word):

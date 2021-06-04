@@ -1,7 +1,7 @@
 # coding=utf-8
 import os
 import html
-import re
+# import re
 import pickle
 from lxml import etree
 from lxml import etree as ET2

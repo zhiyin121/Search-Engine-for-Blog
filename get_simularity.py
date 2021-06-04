@@ -2,7 +2,7 @@ from get_data import GroupData
 from build_dictionary import tokenizer
 from analysis_query import clean_query, AugmentedQuery
 
-import os
+# import os
 import copy
 import math
 import pickle
@@ -104,8 +104,8 @@ if __name__ == '__main__':
     filepath = '/Users/tan/OneDrive - xiaozhubaoxian/blog/blogs/'
     local_filepath = './blogs/'
     pickle_path = './group_data_objects.pickle'
-    if not os.path.isfile("group_data_objects.pickle"):
-        engine.load_corpus(filepath, local_filepath, pickle_path)
+    #if not os.path.isfile("group_data_objects.pickle"):
+    #    engine.load_corpus(filepath, local_filepath, pickle_path)
 
     # Read a pickle file
     with open('./group_data_objects.pickle', 'rb') as f:

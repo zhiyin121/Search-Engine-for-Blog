@@ -112,7 +112,7 @@ def get_posting_list(docs, vocabuary_to_id):
     indexing = {}
     i = 0
     for tokens in docs:
-        print(i, len(docs))
+        #print(i, len(docs))
         i += 1
         blog_id = tokens[-1]
         count = Counter(tokens[:-1])

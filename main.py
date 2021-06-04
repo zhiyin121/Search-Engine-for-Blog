@@ -1,5 +1,4 @@
 from get_data import GroupData, get_filename, get_data
-from analysis_query import AugmentedQuery
 from get_simularity import Score
 from dp_similarity import SentenceTransformers
 

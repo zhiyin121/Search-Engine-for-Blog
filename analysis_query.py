@@ -1,4 +1,5 @@
 from get_data import GroupData
+from build_dictionary import tokenizer
 
 import pickle
 from spellchecker import SpellChecker
@@ -12,6 +13,7 @@ import nltk
 from nltk.corpus import wordnet
 from gensim.models import KeyedVectors
 from negspacy.negation import Negex # negate name entity
+spacy_stopwords = spacy.lang.en.stop_words.STOP_WORDS
 
 def clean_query(query):
     # Lemalization and lower case
@@ -58,7 +60,7 @@ class AugmentedQuery:
             definition = token.definition().split(' ')
             for word in definition:
                 word = nlp(word)[0].lemma_.lower()
-                if not nlp(word)[0].is_stop:
+                if word not in spacy_stopwords:
                     definition_set.add(word)
         return synonyms_set, definition_set
 
@@ -82,7 +84,7 @@ class AugmentedQuery:
                 definition = token.lemmas()[0].antonyms()[0].synset().definition().split(' ')
                 for word in definition:
                     word = nlp(word)[0].lemma_.lower()
-                    if not nlp(word)[0].is_stop:
+                    if word not in spacy_stopwords:
                         definition_set.add(word)
         return antonyms_set, definition_set # Could be empty set()
 
@@ -128,7 +130,7 @@ class AugmentedQuery:
             # When it contains a negative expression
             ## not + adj/v -> ['not adj/v.'] or ['antonyms']
             ## not + n -> delete ['not v/n'] (not yet done)
-            if token == 'not':
+            if token == 'not' or token == 'n\'t':
                 next_token = query_list[index+1]
                 # Compose phrases containing not (semantically related)
                 # Bonus points if the document is included, no reduction if it is not
@@ -148,23 +150,24 @@ class AugmentedQuery:
         return
 
     def augment_query(self):
-        augment_dic = {}
-        # Get each word(except stopwords)'s synonyms, hyponyms, and hypernyms 
-        synonyms_set = set(); definition_set = set(); hyponyms_set = set(); hypernyms_set = set()
-        for index in range(len(self.query_list)):
-            token = self.query_list[index]
-            if not nlp(token)[0].is_stop:
-                synonyms, definition = self.get_synonyms(token)
-                synonyms_set = synonyms_set | synonyms
-                definition_set = definition_set | definition
-
-                hyponyms_set = self.get_hyponyms(token)
-                hypernyms_set = self.get_hypernyms(token)
-
         # Get the phrase containing 'not' and discover the semantically similar word
         antonyms_set, not_phrase_set, delete_set = self.get_negation(self.query_list)
 
-        class augment_set:
+        # Get each word(except stopwords)'s synonyms, hyponyms, and hypernyms 
+        synonyms_set = set(); definition_set = set(); hyponyms_set = set(); hypernyms_set = set()
+
+        for index in range(len(self.query_list)):
+            token = self.query_list[index]
+            if token not in spacy_stopwords:
+                if token not in delete_set:
+                    synonyms, definition = self.get_synonyms(token)
+                    synonyms_set = synonyms_set | synonyms
+                    definition_set = definition_set | definition
+
+                    hyponyms_set = self.get_hyponyms(token)
+                    hypernyms_set = self.get_hypernyms(token)
+
+        class AugmentSet:
             def __init__(self,synonyms_set, definition_set, hyponyms_set, hypernyms_set, antonyms_set, not_phrase_set, delete_set):
                 self.synonyms_set = synonyms_set
                 self.definition_set = definition_set
@@ -173,7 +176,7 @@ class AugmentedQuery:
                 self.antonyms_set = antonyms_set
                 self.not_phrase_set = not_phrase_set
                 self.delete_set = delete_set
-        augment_obj = augment_set(synonyms_set, definition_set, hyponyms_set, hypernyms_set, antonyms_set, not_phrase_set, delete_set)
+        augment_obj = AugmentSet(synonyms_set, definition_set, hyponyms_set, hypernyms_set, antonyms_set, not_phrase_set, delete_set)
         return augment_obj
 
 
@@ -186,14 +189,15 @@ if __name__ == '__main__':
     for i in data_lists[:2]:
         print(i.blog_id, i.user_id, i.gender, i.age, i.industry, i.astrology, i.date, i.post, '\n')'''
 
-    query = 'I\'m not hapyy, but he doesn\'t know.'
-    cleaned_query = clean_query(query)
-    e = AugmentedQuery(cleaned_query)
+    #query = ['I\'m not hapyy, but he doesn\'t know.']
+    query = ['New York but not Manhattan']
+    tokenized_query = tokenizer(query)[0]
+    print(tokenized_query)
+    e = AugmentedQuery(tokenized_query)
     augment_obj = e.augment_query()
-    print(augment_obj.synonyms_set)
+    print(augment_obj.antonyms_set)
 
-    
-    
+
     #print(get_hyponyms('emotion'))
 
     '''

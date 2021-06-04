@@ -5,6 +5,7 @@ import pickle
 from collections import Counter
 import time
 import string
+import os
 
 import spacy
 nlp = spacy.load("en_core_web_sm")
@@ -14,10 +15,24 @@ punct = set(string.punctuation)
 
 regard_ent_type = ['LANGUAGE','DATE', 'TIME','MONEY','QUANTITY', 'ORDINAL', 'CARDINAL']
 # Tokenize and lemmatize the sentence, while keeping the name entity phrase as an item
-def tokenizer(text_list):
+def tokenizer(text_list, as_tuple=False):
     token_list = []
-    docs = nlp.pipe(text_list, disable=['tok2vec', 'parser'], n_process=30)
+    if not as_tuple:
+        docs = nlp.pipe(text_list, disable=['tok2vec', 'parser'], n_process=2)
+    else:
+        from spacy.tokens import Doc
+        if not Doc.has_extension("text_id"):
+            Doc.set_extension("text_id", default=None)
+        doc_tuples = nlp.pipe(text_list, disable=['tok2vec', 'parser'], n_process=127, as_tuples=True, batch_size=3000)
+        docs = []
+        for doc, context in doc_tuples:
+            print(context["blog_id"], len(text_list))
+            doc._.text_id = context["blog_id"]
+            docs.append(doc)
+    i = 0
     for doc in docs:
+        print(i, len(text_list))
+        i += 1
         entities_atr = {}
         entities_phrase_dic = {}
         for ent in doc.ents:
@@ -58,6 +73,8 @@ def tokenizer(text_list):
             if token.pos_ != 'SPACE':
                 new_tokens_list.append(token.lemma_.lower()) # or token.text
         #print(new_tokens_list)
+        if as_tuple:
+            new_tokens_list.append(doc._.text_id)
         token_list.append(new_tokens_list)
 
     return token_list #, entities_atr
@@ -81,57 +98,77 @@ def vocabuary(data_lists):
 
 
 # Get voc2id & id2voc dictionary
-def voc_id(vocabuery):
+def voc_id(vocabuary):
     index = 0
-    voc2id = {}; id2voc = {}
+    voc2id = {'<unk>': -1}; id2voc = {}
     for voc in vocabuary:
         voc2id[voc] = index
         id2voc[index] = voc
+        index += 1
     return voc2id, id2voc
-
-
-# Get inverted index
-def get_indexing(data_lists, vocabuery):
-    inverted_index = {}
-    for i in data_lists:
-        posting_list = []
-        doc_token_number = 0
-        sentences = i.post
-        # Add document id as a list, to the dictionary of words it contains
-        if voc2id[voc] in posting:
-            posting[voc2id[voc]].append((i.blog_id, dic[voc], doc_token_number)) # {voc_id:[(blog_id_1, word count), ...]}
-        else:
-            posting[voc2id[voc]] = [(i.blog_id, dic[voc], doc_token_number)]
             
-    
-    
-    with open("vocabuary_to_id.json",'w') as v2i:
-        json.dump(voc2id,v2i)
-    with open("id_to_vocabuary.json",'w') as i2v:
-        json.dump(id2voc,i2v)
-    with open("inverted_index.json",'w') as p:
-        json.dump(posting,p)
 
-    return
+def get_posting_list(docs, vocabuary_to_id):
+    indexing = {}
+    i = 0
+    for tokens in docs:
+        print(i, len(docs))
+        i += 1
+        blog_id = tokens[-1]
+        count = Counter(tokens[:-1])
+        for token in count:
+            freq = count[token]
+            if token in vocabuary_to_id:
+                voc_id = vocabuary_to_id[token]
+                if voc_id in indexing:
+                    indexing[voc_id].append((blog_id, freq))
+                else:
+                    indexing[voc_id] = [(blog_id, freq)]
+    return indexing
+
+
+def build():
+    with open('./group_data_objects.pickle', 'rb') as f:
+        data_lists = pickle.load(f)
+
+    if not os.path.isfile("voc_dic.pkl"):
+        voc_dic = vocabuary(data_lists)
+        with open('voc_dic.pkl','wb') as file:
+            pickle.dump(voc_dic, file)
+    else:
+        voc_dic = pickle.load(open('voc_dic.pkl', 'rb'))
+    #print('vocabuary;', vocabuary_end_time-vocabuary_start_time)
+    #print('voc_dic: ', sorted(voc_dic.items(),key=lambda item:item[1],reverse=True)[:100])
+
+    # Construct a vocabuary dictionary
+    
+    if not os.path.isfile("voc2id.pickle"):
+        voc2id, id2voc = voc_id(voc_dic)
+        with open('voc2id.pickle','wb') as file:
+            pickle.dump(voc2id, file)
+        with open('id2voc.pickle','wb') as file:
+            pickle.dump(id2voc, file)
+    else:
+        voc2id = pickle.load(open('voc2id.pickle', 'rb'))
+        id2voc = pickle.load(open('id2voc.pickle', 'rb'))
+    #print('id2voc: ', list(id2voc.items())[:10])
+    #print('voc2id: ', list(voc2id.items())[:10])
+    
+    # store voc_dic.json, voc2id.json, id2voc.json, posting.json
+    if not os.path.isfile("posting_list.pickle"):
+        text_list = [(i.post, {'blog_id': i.blog_id}) for i in data_lists]
+        tokens = tokenizer(text_list, as_tuple=True)
+        with open('tokens.pickle','wb') as file:
+            pickle.dump(tokens, file)
+        posting_list = get_posting_list(tokens, voc2id)
+    # Print some samples
+        print('posting: ', list(posting_list.items())[:10])
+        with open('posting_list.pickle','wb') as file:
+            pickle.dump(posting_list, file)
+    else:
+        posting_list = pickle.load(open('posting_list.pickle', 'rb'))
 
 
 if __name__ == '__main__':
     # Read a pickle file
-    with open('./group_data_objects.pickle', 'rb') as f:
-        data_lists = pickle.load(f)
-    vocabuary_start_time = time.time()
-    voc_dic = vocabuary(data_lists)
-    vocabuary_end_time = time.time()
-    print('vocabuary;', vocabuary_end_time-vocabuary_start_time)
-    print('voc_dic: ', sorted(voc_dic.items(),key=lambda item:item[1],reverse=True)[:100])
-    '''
-    # Construct a vocabuary dictionary
-    voc_dic = {}; voc2id = {'unk': -1}; id2voc = {}; posting = {}
-    get_indexing(data_lists[:10], voc_dic, voc2id, id2voc, posting)
-    # store voc_dic.json, voc2id.json, id2voc.json, posting.json
-    
-    # Print some samples
-    
-    print('id2voc: ', list(id2voc.items())[:10])
-    print('voc2id: ', list(voc2id.items())[:10])
-    print('posting: ', list(posting.items())[:10])'''
+    build()

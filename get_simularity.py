@@ -1,9 +1,9 @@
 from get_data import GroupData
-from build_dictionary import get_indexing
+from build_dictionary import tokenizer
 from analysis_query import clean_query, AugmentedQuery
 
 import os
-import json
+import copy
 import math
 import pickle
 
@@ -16,43 +16,35 @@ class Score:
         tf = token_freq/doc_token_number
         idf = math.log(doc_num/(doc_with_token+1))
         tf_idf = tf * idf
+        
         return tf_idf
 
-    def simularity_score(self, query, data_lists):
+    def simularity_score(self, query):
         # Processing query
-        query_list = clean_query(query)
+        query_list = tokenizer([query])[0]
         augment = AugmentedQuery(query_list)
         augment_obj = augment.augment_query()
         # augment_obj. + synonyms_set, definition_set, hyponyms_set, 
         # augment_obj. + hypernyms_set, antonyms_set, not_phrase_set, delete_set
         
         # Construct a vocabuary dictionary
-        if not os.path.isfile("vocabuary_dictionary.json"):
-            voc_dic = {}; voc2id = {'unk': -1}; id2voc = {}; posting = {}
-            get_indexing(data_lists, voc_dic, voc2id, id2voc, posting)
-            # store voc_dic.json, voc2id.json, id2voc.json, posting.json
-
-        with open("vocabuary_dictionary.json", 'r') as v:
-            voc_dic = json.loads(v.read())
-        with open("vocabuary_to_id.json", 'r') as v2i:
-            voc2id = json.loads(v2i.read())
-        with open("id_to_vocabuary.json", 'r') as i2v:
-            id2voc = json.loads(i2v.read()) # Key is a string type integer
-        with open("inverted_index.json", 'r') as p:
-            posting = json.loads(p.read()) # Key is string type integer
+        ## voc_dic = pickle.load(open('voc_dic.pickle', 'rb'))
+        voc2id = pickle.load(open('voc2id.pickle', 'rb'))
+        ## id2voc = pickle.load(open('id2voc.pickle', 'rb'))
+        posting = pickle.load(open('posting_list.pickle', 'rb'))
 
         # Deleted 'not' phrase from query
         for token in augment_obj.delete_set:
             query_list.remove(token)
         # Add synonyms of 'not' phrase
-            query_list += list(augment_obj.antonyms_set)
+        query_list += list(augment_obj.antonyms_set)
         # Obtain score by query token
         query_score_dic = {}
-        doc_num = len(data_lists)
+        doc_num = 653741
         for token in query_list:
             if token in voc2id:
                 token_id = voc2id[token]
-                doc_list = posting[str(token_id)]
+                doc_list = posting[token_id]
                 #print(doc_list)
                 doc_with_token = len(doc_list)
                 for info in doc_list:  #[(doc id, token freq, doc token number), ...]
@@ -67,19 +59,44 @@ class Score:
 
         # Obtain score by related word
         related_score_dic = {}
+        all_score_dic = copy.deepcopy(query_score_dic)
         related_token = list(augment_obj.synonyms_set | augment_obj.definition_set | augment_obj.hyponyms_set | augment_obj.hypernyms_set)
         for token in related_token:
             if token in voc2id:
                 token_id = voc2id[token]
-                doc_list = posting[str(token_id)]
+                doc_list = posting[token_id]
+                #print(doc_list)
+                doc_with_token = len(doc_list)
+                for info in doc_list:  #[(doc id, token freq, doc token number), ...]
+                    doc_id = info[0]
+                    token_freq = info[1]
+                    doc_token_number  = info[2]
+                    tf_idf_score = self.tf_idf(token_freq, doc_token_number, doc_with_token, doc_num)
+                    if doc_id in related_score_dic:
+                        related_score_dic[doc_id] += tf_idf_score
+                    else:
+                        related_score_dic[doc_id] = tf_idf_score
+
+                    if doc_id in all_score_dic:
+                        all_score_dic[doc_id] += tf_idf_score * 0.2
+                    else:
+                        all_score_dic[doc_id] = tf_idf_score * 0.2
+                    
+        '''
+        for token in related_token:
+            if token in voc2id:
+                token_id = voc2id[token]
+                doc_list = posting[token_id]
                 for info in doc_list:  #[(doc id, token freq, doc token number), ...]
                     doc_id = info[0]
                     if doc_id in related_score_dic:
+                        all_score_dic[doc_id] += math.log(1.1) * 0.5
                         related_score_dic[doc_id] += 1
                     else:
-                        related_score_dic[doc_id] = 1
+                        all_score_dic[doc_id] = math.log(1.1) * 0.5
+                        related_score_dic[doc_id] = 1'''
 
-        return query_score_dic, related_score_dic
+        return query_score_dic, related_score_dic, all_score_dic
 
 
 if __name__ == '__main__':
@@ -94,13 +111,15 @@ if __name__ == '__main__':
     with open('./group_data_objects.pickle', 'rb') as f:
         data_lists = pickle.load(f)
 
-    query = 'hate exam'
+    query = 'New York but not Manhattan'
     score = Score()
-    query_score_dic, related_score_dic = score.simularity_score(query, data_lists[:20])
+    query_score_dic, related_score_dic, all_score_dic = score.simularity_score(query)
     query_score_dic_20 = sorted(query_score_dic.items(),key=lambda item:item[1],reverse=True)[:100]
     related_score_dic_20 = sorted(related_score_dic.items(),key=lambda item:item[1],reverse=True)[:100]
+    all_score_dic_20 = sorted(all_score_dic.items(),key=lambda item:item[1],reverse=True)[:100]
     print('query_score_dic:\n', query_score_dic_20)
     print('related_score_dic:\n', related_score_dic_20)
+    print('all_score_dic:\n', all_score_dic_20)
     
     inter = []
     for i in query_score_dic_20:

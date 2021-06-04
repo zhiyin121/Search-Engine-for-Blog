@@ -99,10 +99,11 @@ if __name__ == '__main__':
         data_lists = pickle.load(f)
 
     # Print examples
-    for i in data_lists[:3]:
-        #print(i.blog_id, i.user_id, i.gender, i.age, i.industry, i.astrology, i.date, i.post, '\n')
+    for i in data_lists:
+        if i.blog_id == 72249:
+            print(i.blog_id, i.user_id, i.gender, i.age, i.industry, i.astrology, i.date, i.post, '\n')
         # print(tokenizer(i.post))
-        pass
+       
 '''
 # test html and xml parser
 filepath = '/Users/tan/OneDrive - xiaozhubaoxian/blog/blogs/'

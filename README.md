@@ -23,11 +23,12 @@
      #3 apple slow         --- (ambiguity)
      #4 apple pie          --- (ambiguity)
      #5 Americam           --- (auto correct typo)
+```
 
-  -> What do you search for:
 
-#### example 2
+#### example 1
 ```  
+  -> What do you search for:
   ----input----
      New York
 
@@ -46,6 +47,7 @@
 
 #### example 2
 ```
+  -> What do you search for:
   ----input----
     childerm
 

@@ -66,6 +66,6 @@
      ...
 ```
 
-## ENext Step
+## Next Step
 * Obtain sentence embeddings from pre-trained language models (e.g. BERT).
 * Calculate the similarity between the query and each blog via the embedding vector

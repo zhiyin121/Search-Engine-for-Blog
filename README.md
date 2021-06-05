@@ -28,14 +28,14 @@
 
 #### example 2
 ```  
-  # input
+  ----input----
      New York
 
   -> Loading...
   -> Ranking...
   -> Ready to return results...
 
-  # return result
+  ----return result----
   -> 354351 1499735 female 24 indUnk Pisces 01,August,2004 before new york 
      208066 3586075 male 46 indUnk Virgo 08,July,2004 New York   urlLink 
      64234 946952 female 25 Education Leo 04,August,2004 New York as told by ME   Here's the  urlLink photojournal . Enjoy! 
@@ -46,23 +46,23 @@
 
 #### example 2
 ```
-  # input
+  ----input----
     childerm
 
   -> Loading...
   -> Do you mean "childern"?
   -> Except the change?(enter:y/n)  |  Additional options(enter:add)
 
-  # input
+  ----input----
      add
 
   -> {0: ['children'], 1: ['childre']}
      choose one candidates or keep the original?(enter:number/i)
 
-  # input
+  ----input----
       1
 
-  # return result
+  ----return result----
   -> Ranking...
   -> Ready to return results...
   -> 256402 1524664 female 23 Law Capricorn 22,May,2004...

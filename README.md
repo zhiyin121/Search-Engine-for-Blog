@@ -25,14 +25,17 @@
      #5 Americam           --- (auto correct typo)
 
   -> What do you search for:
+
+#### example 2
+```  
+  # input
      New York
-```
-* Output
-```
+
   -> Loading...
   -> Ranking...
-  -> Soon to return results...
-  
+  -> Ready to return results...
+
+  # return result
   -> 354351 1499735 female 24 indUnk Pisces 01,August,2004 before new york 
      208066 3586075 male 46 indUnk Virgo 08,July,2004 New York   urlLink 
      64234 946952 female 25 Education Leo 04,August,2004 New York as told by ME   Here's the  urlLink photojournal . Enjoy! 
@@ -41,4 +44,29 @@
     ...
 ```
 
+#### example 2
+```
+  # input
+    childerm
+
+  -> Loading...
+  -> Do you mean "childern"?
+  -> Except the change?(enter:y/n)  |  Additional options(enter:add)
+
+  # input
+     add
+
+  -> {0: ['children'], 1: ['childre']}
+     choose one candidates or keep the original?(enter:number/i)
+
+  # input
+      1
+
+  # return result
+  -> Ranking...
+  -> Ready to return results...
+  -> 256402 1524664 female 23 Law Capricorn 22,May,2004...
+     252193 2462056 male 15 Student Leo 10,July,2004...
+     ...
+```
 

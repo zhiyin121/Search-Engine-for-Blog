@@ -1,4 +1,3 @@
-from get_data import GroupData
 from build_dictionary import tokenizer
 from analysis_query import spelling_correction, AugmentedQuery
 

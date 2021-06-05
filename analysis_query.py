@@ -53,7 +53,7 @@ def spelling_correction(query_list):
     else:
         return query_list
     
-#print(spelling_correction(['amercam', 'peoplo']))
+#print(spelling_correction(['childrem']))
 
 class AugmentedQuery:
     def __init__(self, query_list):

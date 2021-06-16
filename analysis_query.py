@@ -1,3 +1,4 @@
+from build_dictionary import tokenizer
 from get_data import GroupData
 
 from itertools import product
@@ -54,6 +55,16 @@ def spelling_correction(query_list):
         return query_list
     
 #print(spelling_correction(['childrem']))
+
+class AugmentSet:
+    def __init__(self,synonyms_set, definition_set, hyponyms_set, hypernyms_set, antonyms_set, not_phrase_set, delete_set):
+        self.synonyms_set = synonyms_set
+        self.definition_set = definition_set
+        self.hyponyms_set = hyponyms_set
+        self.hypernyms_set = hypernyms_set
+        self.antonyms_set = antonyms_set
+        self.not_phrase_set = not_phrase_set
+        self.delete_set = delete_set
 
 class AugmentedQuery:
     def __init__(self, query_list):
@@ -186,18 +197,9 @@ class AugmentedQuery:
                     synonyms_set = synonyms_set | synonyms
                     definition_set = definition_set | definition
 
-                    hyponyms_set = self.get_hyponyms(token)
-                    hypernyms_set = self.get_hypernyms(token)
+                    hyponyms_set = hyponyms_set | self.get_hyponyms(token)
+                    hypernyms_set = hypernyms_set | self.get_hypernyms(token)
 
-        class AugmentSet:
-            def __init__(self,synonyms_set, definition_set, hyponyms_set, hypernyms_set, antonyms_set, not_phrase_set, delete_set):
-                self.synonyms_set = synonyms_set
-                self.definition_set = definition_set
-                self.hyponyms_set = hyponyms_set
-                self.hypernyms_set = hypernyms_set
-                self.antonyms_set = antonyms_set
-                self.not_phrase_set = not_phrase_set
-                self.delete_set = delete_set
         augment_obj = AugmentSet(synonyms_set, definition_set, hyponyms_set, hypernyms_set, antonyms_set, not_phrase_set, delete_set)
         return augment_obj
 
@@ -211,15 +213,16 @@ if __name__ == '__main__':
     for i in data_lists[:2]:
         print(i.blog_id, i.user_id, i.gender, i.age, i.industry, i.astrology, i.date, i.post, '\n')'''
 
-    '''
+    
     #query = ['I\'m not hapyy, but he doesn\'t know.']
-    query = ['New York but not Manhattan']
+    query = ['cat is not happy in New York']
     tokenized_query = tokenizer(query)[0]
     print(tokenized_query)
     e = AugmentedQuery(tokenized_query)
     augment_obj = e.augment_query()
-    print(augment_obj.antonyms_set)
-    '''
+    print(augment_obj.hyponyms_set)
+    print(augment_obj.hypernyms_set)
+    
 
     
     

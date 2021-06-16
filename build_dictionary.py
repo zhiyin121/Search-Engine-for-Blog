@@ -18,7 +18,8 @@ regard_ent_type = ['LANGUAGE','DATE', 'TIME','MONEY','QUANTITY', 'ORDINAL', 'CAR
 def tokenizer(text_list, as_tuple=False):
     token_list = []
     if not as_tuple:
-        docs = nlp.pipe(text_list, disable=['tok2vec', 'parser'], n_process=2)
+        docs = nlp.pipe(text_list, disable=['parser'])
+        # docs = nlp.pipe(text_list, disable=['tok2vec', 'parser'], n_process=1)
     else:
         from spacy.tokens import Doc
         if not Doc.has_extension("text_id"):
@@ -94,7 +95,7 @@ def vocabuary(data_lists):
                     voc_dic[token] = 1
     with open("vocabuary_dictionary.json",'w') as v:
         json.dump(voc_dic,v)
-    return voc_dic
+    return voc_dic  # {word: word freq}
 
 
 # Get voc2id & id2voc dictionary
@@ -105,14 +106,14 @@ def voc_id(vocabuary):
         voc2id[voc] = index
         id2voc[index] = voc
         index += 1
-    return voc2id, id2voc
+    return voc2id, id2voc # {word: word id & word id: word}
             
 
-def get_posting_list(docs, vocabuary_to_id):
+def get_posting_list(token_list, vocabuary_to_id):
     indexing = {}
     i = 0
-    for tokens in docs:
-        #print(i, len(docs))
+    for tokens in token_list:
+        #print(i, len(token_list))
         i += 1
         blog_id = tokens[-1]
         count = Counter(tokens[:-1])
@@ -124,19 +125,19 @@ def get_posting_list(docs, vocabuary_to_id):
                     indexing[voc_id].append((blog_id, freq))
                 else:
                     indexing[voc_id] = [(blog_id, freq)]
-    return indexing
+    return indexing # {word id: (blog id, word frequence in this particular blog, word frequence in the whole dataset)}
 
 
 def build():
     with open('./group_data_objects.pickle', 'rb') as f:
         data_lists = pickle.load(f)
 
-    if not os.path.isfile("voc_dic.pkl"):
+    if not os.path.isfile("voc_dic.pickle"):
         voc_dic = vocabuary(data_lists)
-        with open('voc_dic.pkl','wb') as file:
+        with open('voc_dic.pickle','wb') as file:
             pickle.dump(voc_dic, file)
     else:
-        voc_dic = pickle.load(open('voc_dic.pkl', 'rb'))
+        voc_dic = pickle.load(open('voc_dic.pickle', 'rb'))
     #print('vocabuary;', vocabuary_end_time-vocabuary_start_time)
     #print('voc_dic: ', sorted(voc_dic.items(),key=lambda item:item[1],reverse=True)[:100])
 
@@ -157,11 +158,11 @@ def build():
     # store voc_dic.json, voc2id.json, id2voc.json, posting.json
     if not os.path.isfile("posting_list.pickle"):
         text_list = [(i.post, {'blog_id': i.blog_id}) for i in data_lists]
-        tokens = tokenizer(text_list, as_tuple=True)
+        token_list = tokenizer(text_list, as_tuple=True)
         with open('tokens.pickle','wb') as file:
-            pickle.dump(tokens, file)
-        posting_list = get_posting_list(tokens, voc2id)
-    # Print some samples
+            pickle.dump(token_list, file)
+        posting_list = get_posting_list(token_list, voc2id)
+        # Print some samples
         print('posting: ', list(posting_list.items())[:10])
         with open('posting_list.pickle','wb') as file:
             pickle.dump(posting_list, file)
@@ -171,4 +172,21 @@ def build():
 
 if __name__ == '__main__':
     # Read a pickle file
-    build()
+    #build()
+    '''
+    voc2id = pickle.load(open('voc2id.pickle', 'rb'))
+    with open('./group_data_objects.pickle', 'rb') as f:
+        data_lists = pickle.load(f)
+    print("pickle")
+    text_list = [(i.post, {'blog_id': i.blog_id}) for i in data_lists[:10]]
+    print("text_list", text_list)
+    token_list = tokenizer(text_list, as_tuple=True)
+    print("token_list")
+    posting_list = get_posting_list(token_list, voc2id)
+    print("posting_list")
+    # Print some samples
+    print('posting: ', list(posting_list.items())[:10])
+    '''
+    text_list = ["Why this is, I do not know. But, OK."]
+    token_list = tokenizer(text_list, as_tuple=False)
+    print(token_list)

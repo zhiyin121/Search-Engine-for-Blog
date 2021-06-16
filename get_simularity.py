@@ -1,3 +1,4 @@
+from get_data import GroupData
 from build_dictionary import tokenizer
 from analysis_query import spelling_correction, AugmentedQuery
 
@@ -47,7 +48,7 @@ class Score:
                 doc_list = posting[token_id]
                 #print(doc_list)
                 doc_with_token = len(doc_list)
-                for info in doc_list:  #[(doc id, token freq, doc token number), ...]
+                for info in doc_list:  #[(doc id, token freq in this doc, token freq in the whole dataset), ...]
                     doc_id = info[0]
                     token_freq = info[1]
                     doc_token_number  = info[2]

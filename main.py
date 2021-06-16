@@ -83,9 +83,11 @@ if __name__ == '__main__':
         resort_top_100_index = resort_score.argpartition(-100)[-100:]
         resort_top_100 = [all_score_tuple[i] for i in resort_top_100_index]
         # resort_top_100 = sorted(resort_dic.items(),key=lambda item:item[1],reverse=True)[:100]  # [(blog_id, score)]
+        # print(resort_top_100)
         for doc in resort_top_100[:7]:
             doc_id = doc[0]
+            score = doc[1]
             for i in data_lists:
                 if i.blog_id == doc_id:
-                    print(i.blog_id, i.user_id, i.gender, i.age, i.industry, i.astrology, i.date, i.post, '\n')
+                    print(i.blog_id, i.user_id, i.gender, i.age, i.industry, i.astrology, i.date, i.post, score, '\n')
         

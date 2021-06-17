@@ -24,13 +24,13 @@ def spelling_correction(query_list):
             corrected_query.append(token)
     if query_list != corrected_query:
         print('Do you mean "' + ' '.join(corrected_query) + '"?')
-        chose = input("Except the change?(enter:y/n)  |  Additional options(enter:add)\n")
+        chose = input("Yes, No, or Additional options required? [y/n/a]\n")
         if chose == 'y':
             return corrected_query
         elif chose == 'n':
             print("Remind: this may cause no results returned.")
             return query_list
-        elif chose == 'add':
+        elif chose == 'a':
             candidate_token_list = []
             candidates_list = []
             for token in query_list:
@@ -49,8 +49,11 @@ def spelling_correction(query_list):
                 candidates_dic[index] = c
                 index += 1
             print(candidates_dic)
-            chose_add = input("choose one candidates or keep the original?(enter:number/i)\n")
-            return candidates_dic[int(chose_add)]
+            chose_add = input("choose one candidates or keep the original? [number/o]\n")
+            if chose_add == 'o':
+                return query_list
+            else:
+                return candidates_dic[int(chose_add)]
     else:
         return query_list
     

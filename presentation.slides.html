@@ -14401,13 +14401,68 @@ div.jp-OutputPrompt {
 <body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
 
 <div class="reveal">
-<div class="slides"><section><section>
+<div class="slides"><aside class="notes">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[3]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">build_dictionary</span> <span class="kn">import</span> <span class="n">tokenizer</span>
+<span class="kn">from</span> <span class="nn">get_data</span> <span class="kn">import</span> <span class="n">GroupData</span><span class="p">,</span> <span class="n">get_filename</span><span class="p">,</span> <span class="n">get_data</span>
+<span class="kn">from</span> <span class="nn">analysis_query</span> <span class="kn">import</span> <span class="n">spelling_correction</span><span class="p">,</span> <span class="n">AugmentedQuery</span>
+<span class="kn">from</span> <span class="nn">get_simularity</span> <span class="kn">import</span> <span class="n">Score</span>
+<span class="kn">from</span> <span class="nn">dp_similarity</span> <span class="kn">import</span> <span class="n">SentenceTransformers</span>
+<span class="kn">from</span> <span class="nn">main</span> <span class="kn">import</span> <span class="n">main</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.width&#39;</span><span class="p">,</span> <span class="mi">6000</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;TOKENIZERS_PARALLELISM&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;false&quot;</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+
+<span class="kn">import</span> <span class="nn">nltk</span>
+<span class="c1"># nltk.download(&#39;wordnet&#39;)</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">IPython.core.display</span> <span class="kn">import</span> <span class="n">display</span><span class="p">,</span> <span class="n">HTML</span>
+<span class="n">display</span><span class="p">(</span><span class="n">HTML</span><span class="p">(</span><span class="s2">&quot;&lt;style&gt;.container { width:85% !important; }&lt;/style&gt;&quot;</span><span class="p">))</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output " data-mime-type="text/html">
+<style>.container { width:85% !important; }</style>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+</aside><section><section>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <h1 id="Outline">Outline<a class="anchor-link" href="#Outline">&#182;</a></h1><ul>
 <li>Explain the components and functions of the search engine</li>
 <li>Demonstrate demos and test the speed of different cases</li>
-<li>Explain the ranking basis with an example</li>
 <li>Discuss some possible future extensions</li>
 </ul>
 
@@ -14420,7 +14475,7 @@ div.jp-OutputPrompt {
 </div></section><section>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="1.-Data-Loader---store-each-blog-as-objects">1. Data Loader - store each blog as objects<a class="anchor-link" href="#1.-Data-Loader---store-each-blog-as-objects">&#182;</a></h3>
+<h2 id="Data-Loader---store-each-blog-as-objects">Data Loader - store each blog as objects<a class="anchor-link" href="#Data-Loader---store-each-blog-as-objects">&#182;</a></h2>
 </div>
 </div><div class="fragment"><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
@@ -14499,7 +14554,7 @@ Posted blog:		 urlLink        Why this is, I do not know. But, OK.
 </div></div></section><section>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="2.-Vocaburary-Dictionaries">2. Vocaburary Dictionaries<a class="anchor-link" href="#2.-Vocaburary-Dictionaries">&#182;</a></h3>
+<h2 id="Vocaburary-Dictionaries">Vocaburary Dictionaries<a class="anchor-link" href="#Vocaburary-Dictionaries">&#182;</a></h2>
 </div>
 </div><div class="fragment">
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
@@ -14630,7 +14685,7 @@ Posted blog:		 urlLink        Why this is, I do not know. But, OK.
 </div></div></section><section>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="3.-Query-Pre-processors">3. Query Pre-processors<a class="anchor-link" href="#3.-Query-Pre-processors">&#182;</a></h3>
+<h2 id="Query-Pre-processors">Query Pre-processors<a class="anchor-link" href="#Query-Pre-processors">&#182;</a></h2>
 </div>
 </div><div class="fragment">
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
@@ -14725,10 +14780,12 @@ Posted blog:		 urlLink        Why this is, I do not know. But, OK.
 </div><div class="fragment"><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">augm_q</span> <span class="o">=</span> <span class="n">AugmentedQuery</span><span class="p">(</span><span class="n">tokenized_query</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">query</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;who is not happy in New York&quot;</span><span class="p">]</span>
+<span class="n">tokenized_query</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="p">(</span><span class="n">query</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># spaCy</span>
+<span class="n">augm_q</span> <span class="o">=</span> <span class="n">AugmentedQuery</span><span class="p">(</span><span class="n">tokenized_query</span><span class="p">)</span>
 <span class="n">augment_obj</span> <span class="o">=</span> <span class="n">augm_q</span><span class="o">.</span><span class="n">augment_query</span><span class="p">()</span>
 </pre></div>
 
@@ -14740,7 +14797,7 @@ Posted blog:		 urlLink        Why this is, I do not know. But, OK.
 </div></div><div class="fragment"><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Original Query:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">tokenized_query</span><span class="p">)</span>
@@ -14807,7 +14864,7 @@ Revised Query:
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Definition of Synonyms:&quot;</span><span class="p">,</span> <span class="n">augment_obj</span><span class="o">.</span><span class="n">definition_set</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hyponyms:&quot;</span><span class="p">,</span> <span class="n">augment_obj</span><span class="o">.</span><span class="n">hyponyms_set</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hypernyms:&quot;</span><span class="p">,</span> <span class="n">augment_obj</span><span class="o">.</span><span class="n">hypernyms_set</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="n">related_words</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">augment_obj</span><span class="o">.</span><span class="n">synonyms_set</span> <span class="o">|</span> <span class="n">augment_obj</span><span class="o">.</span><span class="n">definition_set</span> <span class="o">|</span> <span class="n">augment_obj</span><span class="o">.</span><span class="n">hyponyms_set</span> <span class="o">|</span> <span class="n">augment_obj</span><span class="o">.</span><span class="n">hypernyms_set</span><span class="p">)</span>
+<span class="n">related_words</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">augment_obj</span><span class="o">.</span><span class="n">synonyms_set</span><span class="o">|</span><span class="n">augment_obj</span><span class="o">.</span><span class="n">definition_set</span><span class="o">|</span><span class="n">augment_obj</span><span class="o">.</span><span class="n">hyponyms_set</span><span class="o">|</span><span class="n">augment_obj</span><span class="o">.</span><span class="n">hypernyms_set</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Related Words:&quot;</span><span class="p">,</span> <span class="n">related_words</span><span class="p">)</span>
 </pre></div>
 
@@ -14905,7 +14962,7 @@ Hyponyms:
 </div></div></section><section>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="4.-Computing-Similarity">4. Computing Similarity<a class="anchor-link" href="#4.-Computing-Similarity">&#182;</a></h3>
+<h2 id="Computing-Similarity">Computing Similarity<a class="anchor-link" href="#Computing-Similarity">&#182;</a></h2>
 </div>
 </div><div class="fragment">
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
@@ -14989,13 +15046,19 @@ Related Words: [&#39;city&#39;, &#39;locate&#39;, &#39;New York City&#39;, &#39;
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <h1 id="Demos">Demos<a class="anchor-link" href="#Demos">&#182;</a></h1>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+</div><div class="fragment">
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h2 id="Regular-Search">Regular Search<a class="anchor-link" href="#Regular-Search">&#182;</a></h2>
+</div>
+</div><aside class="notes">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[2]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">main</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">main</span><span class="p">()</span> <span class="c1"># New York</span>
 </pre></div>
 
      </div>
@@ -15024,37 +15087,45 @@ Related Words: [&#39;city&#39;, &#39;locate&#39;, &#39;New York City&#39;, &#39;
  #5 Americam 	(Auto correct typo)
 
 What do you search for:
-America
+New York
 
 Loading...
 Ranking...
 Ready to return results...
+Running time:  18.23 s
 
-       Score                                               Post               Date  Blog ID  User ID  Gender Age              Industry    Astrology
-0   0.720023                           What exactly is America?        25,May,2004   561014  3297447    male  24     Museums-Libraries        Libra
-1   0.691705                                 God Bless America.       04,July,2004   137081   671748    male  27  Communications-Media        Aries
-2   0.674030                  The world according to America...     09,August,2004   415066   894945    male  27            Technology       Cancer
-3   0.674030                  The world according to America...       28,June,2004   101595   705633    male  27            Technology       Gemini
-4   0.644986                       urlLink    God Bless America       28,July,2004   396693  4063865    male  24          Construction        Virgo
-5   0.605594                  urlLink    america, the beautiful       22,July,2004   570381  2047544  female  23            Technology       Gemini
-6   0.600781      An excellent Thoreau essay.  This is America.     01,August,2004   460579  3510775    male  25             Education       Cancer
-7   0.553461  A Strong America. A Great America. An America ...  28,September,2003   606416  1704362    male  17               Student       Pisces
-8   0.543128  check out  urlLink this place  for all the cra...  01,September,2003   583884  1645698    male  26               Student       Taurus
-9   0.543128  check out  urlLink this place  for all the cra...  01,September,2003   107922  1685295  female  17               Student    Capricorn
-10  0.519362  United We Stand, Passively Mute   America stan...    24,January,2004   207311  1563867    male  27                indUnk          Leo
-11  0.515819                Good by America! See you next week!       29,July,2004    73623  1886224    male  16               Student        Virgo
-12  0.513621  urlLink    Australia and America really do hav...       12,July,2004   289597  2672549    male  26                indUnk        Virgo
-13  0.503673          urlLink         Our Heroes America&#39;s Best     06,August,2004   344289  3909877    male  26           Engineering       Cancer
-14  0.479613        urlLink    America, the beautiful.  urlLink       04,July,2004   532971  3757716    male  23            Consulting    Capricorn
-15  0.469222       In America is good. Go see it.  Made me cry.       01,July,2004   365367  1526231  female  24                indUnk      Scorpio
-16  0.460205  urlLink    Foreign respect of America goes dow...       11,July,2004   538291  3709486    male  27                indUnk       Cancer
-17  0.457116  Quote of the Day  &#34;America is hug deprived, un...     02,August,2004   617737  2297959  female  15               Student       Pisces
-18  0.451368  urlLink The Village Voice: Features: Paranoid ...        26,May,2004   186069  3462927  female  33                  Arts      Scorpio
-19  0.442762               urlLink Ronnie James Dio for America       28,June,2004   132790  3705998    male  37                indUnk  Sagittarius
-Which blog post would you like to see in full content? (number/n)
+       Score                                               Post              Date  Blog ID  User ID  Gender Age              Industry    Astrology
+0   0.806208                                    before new york    01,August,2004   354351  1499735  female  24                indUnk       Pisces
+1   0.699530                                 New York   urlLink      08,July,2004   208066  3586075    male  46                indUnk        Virgo
+2   0.645598  New York as told by ME   Here&#39;s the  urlLink p...    04,August,2004    64234   946952  female  25             Education          Leo
+3   0.617351  This is the weather page for the part of New Y...     09,March,2004   394008  2420099    male  25    Telecommunications       Pisces
+4   0.614674                      DAMN!!! I MISS NEW YORK...:-(      20,June,2004    72249  3165287    male  17               Student     Aquarius
+5   0.583964  Here are pictures from my New York vacation!!!...    15,August,2004   607243  4198156  female  25            Non-Profit    Capricorn
+6   0.574166               urlLink New York, the adventure-game    03,August,2004   143456    75671    male  36           Engineering        Aries
+7   0.570343                     urlLink Why I left New York...   29,January,2004   133608  1308868    male  26  Communications-Media       Cancer
+8   0.541975                        Isn&#39;t she in New York, Mir?    05,August,2004   232991   589736    male  35            Technology        Aries
+9   0.541975                        Isn&#39;t she in New York, Mir?    10,August,2004   157542  1975546  female  23                indUnk        Aries
+10  0.541975                        Isn&#39;t she in New York, Mir?    03,August,2004     3125   734562  female  24                  Arts        Libra
+11  0.541869  I&#39;m back from my first TDY to New York.   urlL...    09,August,2004   575781  3857049  female  23                indUnk          Leo
+12  0.541392                                                New  06,November,2003    53264  1842049  female  24                indUnk     Aquarius
+13  0.541392                                                new      17,June,2004   588178  1407084    male  17               Student          Leo
+14  0.541392                                                new  08,November,2003   478333  1957684    male  23              Military    Capricorn
+15  0.538649  A PUP&#39;S-EYE VIEW OF 1OTH AVENUE   Chicago&#39;s go...      11,July,2004   163316  1274564  female  40              Internet  Sagittarius
+16  0.537775  New York, I keep telling myself that I have to...    16,August,2004   280216  4248403    male  27                indUnk       Cancer
+17  0.537624  Goodbye for now. I will be in New York til Sat...   18,October,2000    27882    49663    male  33                indUnk       Taurus
+18  0.527079  New York, New York.  Well, the girls and I are...  25,February,2003   338232   476271  female  25            Publishing       Pisces
+19  0.525457  Yes Nikki, we all know what you are talking ab...      18,July,2003    10961   944569  female  14               Student          Leo
+
+Which blog post would you like to see in full content? [number/n]
+16
+Full content of blog post  16 :
+ New York, I keep telling myself that I have to leave before I start to like the place.
+
+Which blog post would you like to see in full content? [number/n]
 n
 
 What do you search for:
+nothing
 </pre>
 </div>
 </div>
@@ -15063,64 +15134,20 @@ What do you search for:
 
 </div>
 
-</div></section></section><section><section>
+</div>
+</aside></div><div class="fragment">
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h1 id="Explanation">Explanation<a class="anchor-link" href="#Explanation">&#182;</a></h1>
+<h2 id="Ambiguous-Words">Ambiguous Words<a class="anchor-link" href="#Ambiguous-Words">&#182;</a></h2>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+</div><aside class="notes">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[26]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[3]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">requests</span>
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">from</span> <span class="nn">SPARQLWrapper</span> <span class="kn">import</span> <span class="n">SPARQLWrapper</span><span class="p">,</span> <span class="n">JSON</span>
-<span class="n">sparql</span> <span class="o">=</span> <span class="n">SPARQLWrapper</span><span class="p">(</span><span class="s2">&quot;http://dbpedia.org/sparql&quot;</span><span class="p">)</span>
-
-<span class="k">def</span> <span class="nf">get_taxonomy</span><span class="p">(</span><span class="n">results</span><span class="p">,</span><span class="n">entity</span><span class="p">,</span><span class="n">hypernym_list</span><span class="p">):</span>
-
-    <span class="sd">&#39;&#39;&#39;This recursive function keeps on fetching the hypernyms of the </span>
-<span class="sd">    DBpedia resource recursively till the highest concept or root is reached&#39;&#39;&#39;</span>
-
-    <span class="k">if</span> <span class="n">entity</span> <span class="o">==</span> <span class="s1">&#39;null&#39;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">hypernym_list</span>
-    <span class="k">else</span> <span class="p">:</span>
-        <span class="n">query</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39; </span>
-<span class="s1">        SELECT ?hypernyms </span>
-<span class="s1">        WHERE {&lt;&#39;&#39;&#39;</span><span class="o">+</span><span class="n">entity</span><span class="o">+</span><span class="s1">&#39;&#39;&#39;&gt; &lt;http://purl.org/linguistics/gold/hypernym&gt; ?hypernyms .}</span>
-<span class="s1">        &#39;&#39;&#39;</span>
-        <span class="n">sparql</span><span class="o">.</span><span class="n">setQuery</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
-        <span class="n">sparql</span><span class="o">.</span><span class="n">setReturnFormat</span><span class="p">(</span><span class="n">JSON</span><span class="p">)</span>
-        <span class="n">results</span> <span class="o">=</span> <span class="n">sparql</span><span class="o">.</span><span class="n">query</span><span class="p">()</span><span class="o">.</span><span class="n">convert</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">][</span><span class="s2">&quot;bindings&quot;</span><span class="p">]:</span>
-            <span class="n">hypernym_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;hypernyms&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">][</span><span class="s2">&quot;bindings&quot;</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">get_taxonomy</span><span class="p">(</span><span class="n">results</span><span class="p">,</span><span class="s1">&#39;null&#39;</span><span class="p">,</span><span class="n">hypernym_list</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">get_taxonomy</span><span class="p">(</span><span class="n">results</span><span class="p">,</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">][</span><span class="s2">&quot;bindings&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;hypernyms&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">],</span><span class="n">hypernym_list</span><span class="p">)</span>
-
-<span class="k">def</span> <span class="nf">get_taxonomy_of_resource</span><span class="p">(</span><span class="n">dbpedia_resource</span><span class="p">):</span>
-    <span class="n">list_for_hypernyms</span><span class="o">=</span><span class="p">[]</span>
-    <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="n">results</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">]</span><span class="o">=</span><span class="p">{}</span>
-    <span class="n">results</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">][</span><span class="s2">&quot;bindings&quot;</span><span class="p">]</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
-    <span class="n">taxonomy_list</span> <span class="o">=</span> <span class="n">get_taxonomy</span><span class="p">(</span><span class="n">results</span><span class="p">,</span><span class="n">dbpedia_resource</span><span class="p">,</span><span class="n">list_for_hypernyms</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">taxonomy_list</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[27]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">get_taxonomy_of_resource</span><span class="p">(</span><span class="s2">&quot;http://dbpedia.org/resource/purple&quot;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">main</span><span class="p">()</span> <span class="c1"># apple slow</span>
 </pre></div>
 
      </div>
@@ -15136,13 +15163,65 @@ What do you search for:
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[27]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 
 
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>Query example:
 
+ #1 New York 	(Sensitive to named entities)
+ #2 I&#39;m not happy 	(Understand adjective phrases modified by &#39;not&#39;)
+ #3 apple slow 	(Ambiguity)
+ #4 apple pie 	(Ambiguity)
+ #5 Americam 	(Auto correct typo)
 
-<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>[]</pre>
+What do you search for:
+apple slow
+
+Loading...
+Ranking...
+Ready to return results...
+Running time:  19.453 s
+
+       Score                                               Post               Date  Blog ID  User ID  Gender Age    Industry    Astrology
+0   0.598414                                       mmm...apple.  08,September,2003   619870   955372  female  16     Student        Aries
+1   0.548954  urlLink Technology Special Report: The Future ...    24,January,2002   549643   320317    male  36  Technology       Pisces
+2   0.524693  urlLink ZDNet: Story: Will Microsoft pull the ...    28,January,2002   549634   320317    male  36  Technology       Pisces
+3   0.524136  Apple may come out with a new display.  This p...      17,March,2004   146994  2389810    male  23     Student        Aries
+4   0.513531  urlLink Apple brings Power Macs up to speed - ...    28,January,2002   549635   320317    male  36  Technology       Pisces
+5   0.504086                          (see the lyrics to apple)     02,August,2004   434752   683127    male  27        Arts      Scorpio
+6   0.477063                      cherries 3/4 apple jamba 16oz        15,May,2004   408156   235374    male  27  Technology       Taurus
+7   0.469613  urlLink BW Online: Apple&#39;s Hot New Market: PC ...      15,April,2002   549811   320317    male  36  Technology       Pisces
+8   0.458716  An apple a day keeps the doctor away, but if h...       24,June,2004   421506  3592122  female  16     Student       Gemini
+9   0.448029  what winks and processes data like a tiger?  A...        04,May,2004   540429  1826362    male  27     Student     Aquarius
+10  0.444256     EBay is slow this week 11 auctions and no bids       12,June,2004   498225  3607330    male  39      indUnk          Leo
+11  0.438270                         Dang this page loads slow.        30,May,2004   125209   303162  female  38      indUnk        Virgo
+12  0.434922                    urlLink BW Online: PC to Apple?      15,April,2002   549813   320317    male  36  Technology       Pisces
+13  0.425685                            Let&#39;s take it slow, OK?     16,August,2004   319341  4257755  female  23  Government        Virgo
+14  0.419096  At the time of this post Apple iTunes has sold...       08,July,2004   363121  3828283    male  14      indUnk       Cancer
+15  0.411123  Praise Allah!  Apple is finally going to use  ...   01,November,2000   242410    24336    male  24  Technology          Leo
+16  0.407925  urlLink New iMac lifts Apple&#39;s market position...      26,April,2002   549796   320317    male  36  Technology       Pisces
+17  0.403473                        good god Boy George is slow       01,July,2003   619687   955372  female  16     Student        Aries
+18  0.400297  BUT THEN GIAMBI GROUNDS INTO A DOUBLE PLAY. So...      19,April,2004   206937  2134421    male  23      indUnk  Sagittarius
+19  0.395499  apple head lines under m3s on a major electron...    25,October,2003   401815   994616    male  17     Student        Libra
+
+Which blog post would you like to see in full content? [number/n]
+8
+Full content of blog post  8 :
+ An apple a day keeps the doctor away, but if hes cute scru the fruit!
+
+Which blog post would you like to see in full content? [number/n]
+9
+Full content of blog post  9 :
+ what winks and processes data like a tiger?  Answer:  urlLink apple&#39;s new OS
+
+Which blog post would you like to see in full content? [number/n]
+n
+
+What do you search for:
+nothing
+</pre>
+</div>
 </div>
 
 </div>
@@ -15150,19 +15229,14 @@ What do you search for:
 </div>
 
 </div>
-
-</div></section></section><section><section>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h1 id="Extentions">Extentions<a class="anchor-link" href="#Extentions">&#182;</a></h1>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+</aside><aside class="notes">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span> 
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">main</span><span class="p">()</span> <span class="c1"># apple pie</span>
 </pre></div>
 
      </div>
@@ -15170,7 +15244,717 @@ What do you search for:
 </div>
 </div>
 
-</div></section></section>
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>Query example:
+
+ #1 New York 	(Sensitive to named entities)
+ #2 I&#39;m not happy 	(Understand adjective phrases modified by &#39;not&#39;)
+ #3 apple slow 	(Ambiguity)
+ #4 apple pie 	(Ambiguity)
+ #5 Americam 	(Auto correct typo)
+
+What do you search for:
+apple pie
+
+Loading...
+Ranking...
+Ready to return results...
+Running time:  16.009 s
+
+       Score                                               Post               Date  Blog ID  User ID  Gender Age      Industry    Astrology
+0   0.769318                                               pie.       22,June,2004    49573  3716795    male  16        indUnk  Sagittarius
+1   0.695093  pie, as in, the actual, sugary, tasty, pastry ...    28,October,2003   149578   925742    male  16       Student       Gemini
+2   0.640217                                           heha pie   25,February,2004   607885  2543884    male  13        indUnk       Pisces
+3   0.640217                                           heha pie   25,February,2004   219908  3762737  female  13        indUnk     Aquarius
+4   0.625188                                       mmm...apple.  08,September,2003   619870   955372  female  16       Student        Aries
+5   0.616281                                          ...pie...       01,June,2004   531379   106651    male  25        indUnk          Leo
+6   0.583230  Pie   Ladies and Gentlemen:   The  urlLink Ame...  15,September,2003   384796  1428880    male  27        indUnk     Aquarius
+7   0.569566  David and I making pie last night  urlLink    ...     08,August,2004   263273  3982853  female  34       Student       Cancer
+8   0.568080     Hey, I&#39;m baking a pie for school, gotta go bye        18,May,2004   530768  1963555  female  14       Student      Scorpio
+9   0.553455  the other half of yesterday&#39;s apple pie bagel ...   23,December,2002   438527  1209865  female  33  Architecture        Virgo
+10  0.553455  the other half of yesterday&#39;s apple pie bagel ...   23,December,2002    19402  1689280  female  27        indUnk          Leo
+11  0.536880      floor pie &gt; pun pie &gt; humble pie.  -Phil out.      09,March,2003   112461  1144172    male  17        indUnk        Libra
+12  0.526090  urlLink     find your inner PIE @ stvlive.com ...       31,July,2004   252551  3671726  female  33        indUnk       Gemini
+13  0.521341  Bite me. ...  Osobuko does not look like a pie...   23,November,2003    11384   944569  female  14       Student          Leo
+14  0.517146                                 Make pie, not war.        26,May,2004   358424  1960525    male  15       Student        Libra
+15  0.517146                                 Make pie, not war.        26,May,2004   350950  3344459    male  15        indUnk        Aries
+16  0.517146                                 Make pie, not war.        26,May,2004   648531  1609589    male  16       Student    Capricorn
+17  0.515705  cored apple, cut apple into slices. cut some c...   22,December,2002    19410  1689280  female  27        indUnk          Leo
+18  0.515705  cored apple, cut apple into slices. cut some c...   22,December,2002   438535  1209865  female  33  Architecture        Virgo
+19  0.503270  urlLink    Hannan and Becky enjoying the Pie a...     09,August,2004   110097  3451935    male  17       Banking        Aries
+
+Which blog post would you like to see in full content? [number/n]
+9
+Full content of blog post  9 :
+ the other half of yesterday&#39;s apple pie bagel more generic cream cheese more coffee
+
+Which blog post would you like to see in full content? [number/n]
+n
+
+What do you search for:
+nothing
+</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</aside></div><div class="fragment">
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h2 id="Typo">Typo<a class="anchor-link" href="#Typo">&#182;</a></h2>
+</div>
+</div><aside class="notes">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">main</span><span class="p">()</span> <span class="c1"># Americam</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>Query example:
+
+ #1 New York 	(Sensitive to named entities)
+ #2 I&#39;m not happy 	(Understand adjective phrases modified by &#39;not&#39;)
+ #3 apple slow 	(Ambiguity)
+ #4 apple pie 	(Ambiguity)
+ #5 Americam 	(Auto correct typo)
+
+What do you search for:
+Americam
+
+Loading...
+Do you mean &#34;american&#34;?
+Yes, No, or Additional options required? [y/n/a]
+a
+{0: [&#39;americas&#39;], 1: [&#39;american&#39;], 2: [&#39;america&#39;]}
+choose one candidates or keep the original? [number/o]
+2
+Ranking...
+Ready to return results...
+Running time:  20.424 s
+
+       Score                                               Post            Date  Blog ID  User ID  Gender Age              Industry    Astrology
+0   0.635265                  The world according to America...  09,August,2004   415066   894945    male  27            Technology       Cancer
+1   0.635265                  The world according to America...    28,June,2004   101595   705633    male  27            Technology       Gemini
+2   0.630302                                 God Bless America.    04,July,2004   137081   671748    male  27  Communications-Media        Aries
+3   0.617592                           What exactly is America?     25,May,2004   561014  3297447    male  24     Museums-Libraries        Libra
+4   0.592779                       urlLink    God Bless America    28,July,2004   396693  4063865    male  24          Construction        Virgo
+5   0.509472                  urlLink    america, the beautiful    22,July,2004   570381  2047544  female  23            Technology       Gemini
+6   0.465406          urlLink         Our Heroes America&#39;s Best  06,August,2004   344289  3909877    male  26           Engineering       Cancer
+7   0.442072               urlLink Ronnie James Dio for America    28,June,2004   132790  3705998    male  37                indUnk  Sagittarius
+8   0.436458       South Park + SuperMarionation = Team America    21,July,2004   343295    67459    male  34                  Arts    Capricorn
+9   0.419910  Take back american Conference link   http://ww...    11,June,2003   397933  1449141    male  43             Education     Aquarius
+10  0.400802               urlLink    MEET MS. AMERICA  urlLink  03,August,2004   127170  2822042  female  47                  Arts       Taurus
+11  0.393067                              REAL AMERICAN HEROISM   01,April,2004   370145  1296081  female  45            Technology        Virgo
+12  0.378114                         urlLink    American Cancel    27,July,2004   105736  1076363    male  40  Communications-Media       Pisces
+13  0.375034                      urlLink God&#39;s American Israel    08,July,2004   615143  3336876  female  37            Non-Profit      Scorpio
+14  0.372390                              DR SUESS SEES AMERICA   03,April,2004   370144  1296081  female  45            Technology        Virgo
+15  0.369211             urlLink    American exchange students.    26,June,2004   334906  3748818  female  16      BusinessServices       Cancer
+16  0.360014            urlLink        America&#39;s Young Warriors    30,July,2004   344141  3909877    male  26           Engineering       Cancer
+17  0.350966  urlLink Scientific American: longest running s...  02,August,2004   563901   576311  female  34                indUnk    Capricorn
+18  0.350850              Someone posted this at Free Republic.  20,August,2004   353989  4208516    male  35            Publishing       Taurus
+19  0.344763   urlLink    Me checking out the Pacific.  urlLink     30,May,2004   388255  3481866  female  23           Engineering       Pisces
+
+Which blog post would you like to see in full content? [number/n]
+18
+Full content of blog post  18 :
+ Someone posted this at Free Republic.
+
+Which blog post would you like to see in full content? [number/n]
+n
+
+What do you search for:
+nothing
+</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</aside><aside class="notes">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[10]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tokenized_query</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;america&#39;</span><span class="p">]</span>
+<span class="n">augm_q</span> <span class="o">=</span> <span class="n">AugmentedQuery</span><span class="p">(</span><span class="n">tokenized_query</span><span class="p">)</span>
+<span class="n">augment_obj</span> <span class="o">=</span> <span class="n">augm_q</span><span class="o">.</span><span class="n">augment_query</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Synonyms:&quot;</span><span class="p">,</span> <span class="n">augment_obj</span><span class="o">.</span><span class="n">synonyms_set</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Definition of Synonyms:&quot;</span><span class="p">,</span> <span class="n">augment_obj</span><span class="o">.</span><span class="n">definition_set</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hyponyms:&quot;</span><span class="p">,</span> <span class="n">augment_obj</span><span class="o">.</span><span class="n">hyponyms_set</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hypernyms:&quot;</span><span class="p">,</span> <span class="n">augment_obj</span><span class="o">.</span><span class="n">hypernyms_set</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>Synonyms: {&#39;US&#39;, &#39;America&#39;, &#39;United States&#39;, &#39;United States of America&#39;, &#39;USA&#39;, &#39;the States&#39;, &#39;U.S.&#39;, &#39;U.S.A.&#39;} 
+
+Definition of Synonyms: {&#39;independence&#39;, &#39;island&#39;, &#39;central&#39;, &#39;1776&#39;, &#39;northwest&#39;, &#39;north&#39;, &#39;plus&#39;, &#39;achieve&#39;, &#39;south&#39;, &#39;50&#39;, &#39;america&#39;, &#39;state&#39;, &#39;conterminous&#39;, &#39;contain&#39;, &#39;alaska&#39;, &#39;-&#39;, &#39;pacific&#39;, &#39;american&#39;, &#39;ocean&#39;, &#39;republic&#39;, &#39;hawaiian&#39;, &#39;48&#39;} 
+
+Hyponyms: set() 
+
+Hypernyms: set() 
+
+</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</aside></div></section></section><section><section>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h1 id="Extentions">Extentions<a class="anchor-link" href="#Extentions">&#182;</a></h1>
+</div>
+</div><div class="fragment">
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h2 id="Knowledge-Graphs">Knowledge Graphs<a class="anchor-link" href="#Knowledge-Graphs">&#182;</a></h2>
+</div>
+</div></div><div class="fragment">
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="Disambiguate">Disambiguate<a class="anchor-link" href="#Disambiguate">&#182;</a></h3><ul>
+<li>e.g. DBpedia dbo:wikiPageDisambiguates</li>
+</ul>
+
+</div>
+</div></div><div class="fragment">
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="Search-for-semantically-relevant-concepts-and-entities">Search for semantically relevant concepts and entities<a class="anchor-link" href="#Search-for-semantically-relevant-concepts-and-entities">&#182;</a></h3>
+</div>
+</div><aside class="notes">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">normalize_uris</span> <span class="kn">import</span> <span class="n">normalize_uris</span>
+<span class="kn">from</span> <span class="nn">query_dbpedia</span> <span class="kn">import</span> <span class="n">query</span>
+
+<span class="k">def</span> <span class="nf">describe_resource</span><span class="p">(</span><span class="n">in_data</span><span class="p">):</span>
+    <span class="n">uri</span> <span class="o">=</span> <span class="n">normalize_uris</span><span class="p">(</span><span class="n">in_data</span><span class="p">)</span>
+    <span class="n">q1</span> <span class="o">=</span> <span class="s2">&quot;PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; SELECT ?types WHERE { &lt;&quot;</span> <span class="o">+</span> <span class="n">uri</span> <span class="o">+</span> <span class="s2">&quot;&gt; rdf:type ?types}&quot;</span>
+    <span class="n">results1</span> <span class="o">=</span> <span class="n">query</span><span class="p">(</span><span class="n">q1</span><span class="p">)</span>
+
+    <span class="n">types</span> <span class="o">=</span> <span class="s1">&#39;all the types: </span><span class="se">\n</span><span class="s1">&#39;</span>
+    <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results1</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">][</span><span class="s2">&quot;bindings&quot;</span><span class="p">]:</span>
+        <span class="n">types</span> <span class="o">+=</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;types&quot;</span><span class="p">][</span><span class="s2">&quot;value&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+    <span class="n">q2</span> <span class="o">=</span> <span class="s2">&quot;SELECT DISTINCT ?property WHERE { &lt;&quot;</span> <span class="o">+</span> <span class="n">uri</span> <span class="o">+</span> <span class="s2">&quot;&gt; ?property ?value .}&quot;</span>
+    <span class="c1"># FILTER (!isLiteral(?property))</span>
+    <span class="c1">#q2 = &quot;SELECT DISTINCT ?property WHERE { &lt;&quot; + uri + &quot;&gt; ?property ?value .}&quot;</span>
+    <span class="n">results2</span> <span class="o">=</span> <span class="n">query</span><span class="p">(</span><span class="n">q2</span><span class="p">)</span>
+
+    <span class="n">distinct</span> <span class="o">=</span> <span class="s2">&quot;all the distinct properties: </span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results2</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">][</span><span class="s2">&quot;bindings&quot;</span><span class="p">]:</span>
+        <span class="n">distinct</span> <span class="o">+=</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;property&quot;</span><span class="p">][</span><span class="s2">&quot;value&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+    <span class="k">return</span> <span class="n">types</span> <span class="o">+</span> <span class="n">distinct</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+</aside><aside class="notes">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[12]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">uri_data_1</span> <span class="o">=</span> <span class="s1">&#39;dbr:New_York_City&#39;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">describe_resource</span><span class="p">(</span><span class="n">uri_data_1</span><span class="p">))</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>all the types: 
+http://www.w3.org/2002/07/owl#Thing
+http://dbpedia.org/ontology/Place
+http://dbpedia.org/ontology/Location
+http://www.w3.org/2003/01/geo/wgs84_pos#SpatialThing
+http://dbpedia.org/class/yago/Object100002684
+http://dbpedia.org/class/yago/Organization108008335
+http://dbpedia.org/class/yago/PhysicalEntity100001930
+http://dbpedia.org/class/yago/Region108630985
+http://dbpedia.org/class/yago/School108276720
+http://dbpedia.org/class/yago/Seat108647945
+http://dbpedia.org/class/yago/SecondarySchool108284481
+http://dbpedia.org/class/yago/Site108651247
+http://dbpedia.org/class/yago/SocialGroup107950920
+http://dbpedia.org/class/yago/StateCapital108695539
+http://dbpedia.org/class/yago/Tract108673395
+http://dbpedia.org/class/yago/UrbanArea108675967
+http://dbpedia.org/class/yago/WikicatPopulatedCoastalPlacesInNewYork
+http://dbpedia.org/class/yago/WikicatPopulatedPlacesEstablishedIn1624
+http://dbpedia.org/class/yago/WikicatPopulatedPlacesOnTheHudsonRiver
+http://dbpedia.org/class/yago/WikicatPortCities
+http://dbpedia.org/class/yago/WikicatPortCitiesAndTownsOfTheUnitedStatesAtlanticCoast
+http://dbpedia.org/class/yago/WikicatPublicMiddleSchoolsInNewYorkCity
+http://dbpedia.org/class/yago/YagoGeoEntity
+http://dbpedia.org/class/yago/YagoLegalActor
+http://dbpedia.org/class/yago/YagoLegalActorGeo
+http://dbpedia.org/class/yago/YagoPermanentlyLocatedEntity
+http://dbpedia.org/class/yago/WikicatMagnetSchoolsInNewYork
+http://dbpedia.org/class/yago/WikicatMetropolitanAreasOfNewYork
+http://dbpedia.org/class/yago/WikicatMetropolitanAreasOfTheUnitedStates
+http://dbpedia.org/class/yago/WikicatStatesOfTheUnitedStates
+http://schema.org/City
+http://schema.org/Place
+http://www.wikidata.org/entity/Q486972
+http://www.wikidata.org/entity/Q515
+http://dbpedia.org/class/yago/WikicatCitiesInNewYork
+http://dbpedia.org/class/yago/WikicatCitiesInTheNewYorkMetropolitanArea
+http://dbpedia.org/class/yago/WikicatCitiesWithMillionsOfInhabitants
+http://dbpedia.org/class/yago/WikicatEducationalInstitutionsEstablishedIn1982
+http://dbpedia.org/class/yago/WikicatFormerCapitalsOfTheUnitedStates
+http://dbpedia.org/class/yago/WikicatFormerUnitedStatesStateCapitals
+http://dbpedia.org/class/yago/WikicatSchoolsInManhattan
+http://dbpedia.org/ontology/City
+http://dbpedia.org/ontology/Settlement
+http://dbpedia.org/ontology/PopulatedPlace
+http://dbpedia.org/class/yago/Abstraction100002137
+http://dbpedia.org/class/yago/AdministrativeDistrict108491826
+http://dbpedia.org/class/yago/Area108497294
+http://dbpedia.org/class/yago/Capital108518505
+http://dbpedia.org/class/yago/Center108523483
+http://dbpedia.org/class/yago/City108524735
+http://dbpedia.org/class/yago/District108552138
+http://dbpedia.org/class/yago/EducationalInstitution108276342
+http://dbpedia.org/class/yago/GeographicalArea108574314
+http://dbpedia.org/class/yago/Group100031264
+http://dbpedia.org/class/yago/Institution108053576
+http://dbpedia.org/class/yago/Location100027167
+http://dbpedia.org/class/yago/Municipality108626283
+http://dbpedia.org/class/yago/WikicatNortheasternUnitedStates
+http://umbel.org/umbel/rc/City
+http://umbel.org/umbel/rc/Location_Underspecified
+http://umbel.org/umbel/rc/PopulatedPlace
+http://umbel.org/umbel/rc/Village
+all the distinct properties: 
+http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+http://www.w3.org/2000/01/rdf-schema#label
+http://www.w3.org/2000/01/rdf-schema#comment
+http://www.w3.org/2000/01/rdf-schema#seeAlso
+http://xmlns.com/foaf/0.1/name
+http://xmlns.com/foaf/0.1/nick
+http://xmlns.com/foaf/0.1/homepage
+http://www.w3.org/2004/02/skos/core#exactMatch
+http://dbpedia.org/property/name
+http://www.w3.org/2003/01/geo/wgs84_pos#lat
+http://www.w3.org/2003/01/geo/wgs84_pos#long
+http://xmlns.com/foaf/0.1/depiction
+http://xmlns.com/foaf/0.1/isPrimaryTopicOf
+http://www.w3.org/2003/01/geo/wgs84_pos#geometry
+http://dbpedia.org/ontology/thumbnail
+http://purl.org/dc/terms/subject
+http://dbpedia.org/ontology/wikiPageID
+http://dbpedia.org/ontology/wikiPageRevisionID
+http://dbpedia.org/ontology/wikiPageWikiLink
+http://dbpedia.org/ontology/wikiPageExternalLink
+http://www.w3.org/2002/07/owl#sameAs
+http://www.georss.org/georss/point
+http://dbpedia.org/property/wikiPageUsesTemplate
+http://dbpedia.org/ontology/areaLand
+http://dbpedia.org/property/align
+http://dbpedia.org/property/alt
+http://dbpedia.org/property/areaCode
+http://dbpedia.org/property/areaTotalKm
+http://dbpedia.org/property/b
+http://dbpedia.org/property/blank1Info
+http://dbpedia.org/property/blank1InfoSec
+http://dbpedia.org/property/blank1Name
+http://dbpedia.org/property/blank1NameSec
+http://dbpedia.org/property/blank2InfoSec
+http://dbpedia.org/property/blank2NameSec
+http://dbpedia.org/property/blankInfoSec
+http://dbpedia.org/property/blankName
+http://dbpedia.org/property/blankNameSec
+http://dbpedia.org/property/book
+http://dbpedia.org/property/caption
+http://dbpedia.org/property/colwidth
+http://dbpedia.org/property/commons
+http://dbpedia.org/property/d
+http://dbpedia.org/property/dSearch
+http://dbpedia.org/property/direction
+http://dbpedia.org/property/elevationFt
+http://dbpedia.org/property/elevationM
+http://dbpedia.org/property/establishedDate
+http://dbpedia.org/property/establishedTitle
+http://dbpedia.org/property/float
+http://dbpedia.org/property/footer
+http://dbpedia.org/property/governingBody
+http://dbpedia.org/property/governmentType
+http://dbpedia.org/property/header
+http://dbpedia.org/property/height
+http://dbpedia.org/property/image
+http://dbpedia.org/property/imageCaption
+http://dbpedia.org/property/imageFlag
+http://dbpedia.org/property/imageSeal
+http://dbpedia.org/property/leaderName
+http://dbpedia.org/property/leaderTitle
+http://dbpedia.org/property/mapCaption
+http://dbpedia.org/property/n
+http://dbpedia.org/property/nSearch
+http://dbpedia.org/property/nickname
+http://dbpedia.org/property/perrow
+http://dbpedia.org/property/popEstAsOf
+http://dbpedia.org/property/populationAsOf
+http://dbpedia.org/property/populationBlank
+http://dbpedia.org/property/populationBlank1Title
+http://dbpedia.org/property/populationBlank2Title
+http://dbpedia.org/property/populationDemonym
+http://dbpedia.org/property/populationDensityKm
+http://dbpedia.org/property/populationEst
+http://dbpedia.org/property/populationTotal
+http://dbpedia.org/property/portal
+http://dbpedia.org/property/postalCode
+http://dbpedia.org/property/postalCodeType
+http://dbpedia.org/property/pushpinLabel
+http://dbpedia.org/property/pushpinLabelPosition
+http://dbpedia.org/property/pushpinMap
+http://dbpedia.org/property/pushpinMapCaption
+http://dbpedia.org/property/pushpinMapsize
+http://dbpedia.org/property/pushpinRelief
+http://dbpedia.org/property/q
+http://dbpedia.org/property/rules
+http://dbpedia.org/property/s
+http://dbpedia.org/property/settlementType
+http://dbpedia.org/property/small
+http://dbpedia.org/property/subdivisionName
+http://dbpedia.org/property/subdivisionType
+http://dbpedia.org/property/timezone
+http://dbpedia.org/property/timezone1Dst
+http://dbpedia.org/property/title
+http://dbpedia.org/property/totalType
+http://dbpedia.org/property/totalWidth
+http://dbpedia.org/property/unitPref
+http://dbpedia.org/property/utcOffset
+http://dbpedia.org/property/v
+http://dbpedia.org/property/voy
+http://dbpedia.org/property/website
+http://dbpedia.org/property/width
+http://dbpedia.org/property/wikt
+http://dbpedia.org/property/years
+http://dbpedia.org/ontology/areaMetro
+http://dbpedia.org/ontology/areaWater
+http://dbpedia.org/property/areaLandKm
+http://dbpedia.org/property/areaLandSqMi
+http://dbpedia.org/property/areaMetroSqMi
+http://dbpedia.org/property/areaTotalSqMi
+http://dbpedia.org/property/areaWaterKm
+http://dbpedia.org/property/areaWaterSqMi
+http://dbpedia.org/property/backgroundColor
+http://dbpedia.org/property/blank2Info
+http://dbpedia.org/property/blank2Name
+http://dbpedia.org/property/blank4Info
+http://dbpedia.org/property/blank4Name
+http://dbpedia.org/property/blank5Info
+http://dbpedia.org/property/blank5Name
+http://dbpedia.org/property/blank6Info
+http://dbpedia.org/property/blank6Name
+http://dbpedia.org/property/blank7Info
+http://dbpedia.org/property/blank7Name
+http://dbpedia.org/property/blankEmblemType
+http://dbpedia.org/property/blankInfo
+http://dbpedia.org/property/imageBlankEmblem
+http://dbpedia.org/property/namedFor
+http://dbpedia.org/property/populationDensitySqMi
+http://dbpedia.org/ontology/abstract
+http://dbpedia.org/property/populationRank
+http://dbpedia.org/property/titlebar
+http://dbpedia.org/ontology/areaCode
+http://dbpedia.org/ontology/areaTotal
+http://dbpedia.org/ontology/demonym
+http://dbpedia.org/ontology/elevation
+http://dbpedia.org/ontology/populationDensity
+http://dbpedia.org/ontology/populationTotal
+http://dbpedia.org/ontology/populationTotalRanking
+http://dbpedia.org/ontology/postalCode
+http://dbpedia.org/ontology/utcOffset
+http://dbpedia.org/property/utcOffset1Dst
+http://dbpedia.org/ontology/country
+http://dbpedia.org/ontology/governingBody
+http://dbpedia.org/ontology/governmentType
+http://dbpedia.org/ontology/namedAfter
+http://dbpedia.org/ontology/politicalLeader
+http://dbpedia.org/ontology/subdivision
+http://dbpedia.org/ontology/timeZone
+http://dbpedia.org/ontology/type
+http://schema.org/sameAs
+http://www.w3.org/ns/prov#wasDerivedFrom
+http://dbpedia.org/ontology/PopulatedPlace/areaMetro
+http://dbpedia.org/ontology/PopulatedPlace/areaTotal
+http://dbpedia.org/ontology/PopulatedPlace/populationDensity
+http://dbpedia.org/ontology/wikiPageLength
+
+</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</aside><aside class="notes">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">uri_data_2</span> <span class="o">=</span> <span class="s1">&#39;http://dbpedia.org/resource/Germany&#39;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">describe_resource</span><span class="p">(</span><span class="n">uri_data_2</span><span class="p">))</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>all the types: 
+http://www.w3.org/2002/07/owl#Thing
+http://dbpedia.org/ontology/Place
+http://dbpedia.org/ontology/Location
+http://www.w3.org/2003/01/geo/wgs84_pos#SpatialThing
+http://dbpedia.org/class/yago/Object100002684
+http://dbpedia.org/class/yago/PhysicalEntity100001930
+http://dbpedia.org/class/yago/Region108630985
+http://dbpedia.org/class/yago/YagoGeoEntity
+http://dbpedia.org/class/yago/YagoLegalActorGeo
+http://dbpedia.org/class/yago/YagoPermanentlyLocatedEntity
+http://dbpedia.org/class/yago/WikicatMemberStatesOfNATO
+http://dbpedia.org/class/yago/WikicatMemberStatesOfTheEuropeanUnion
+http://dbpedia.org/class/yago/WikicatMemberStatesOfTheUnionForTheMediterranean
+http://dbpedia.org/class/yago/WikicatMemberStatesOfTheUnitedNations
+http://dbpedia.org/class/yago/WikicatStatesAndTerritoriesEstablishedIn1871
+http://dbpedia.org/class/yago/WikicatStatesAndTerritoriesEstablishedIn1949
+http://schema.org/Place
+http://dbpedia.org/class/yago/WikicatCountries
+http://dbpedia.org/class/yago/WikicatCountriesInEurope
+http://dbpedia.org/class/yago/WikicatFederalCountries
+http://dbpedia.org/class/yago/WikicatGerman-speakingCountriesAndTerritories
+http://dbpedia.org/class/yago/WikicatGermanicCountriesAndTerritories
+http://schema.org/Country
+http://www.wikidata.org/entity/Q6256
+http://dbpedia.org/ontology/Country
+http://dbpedia.org/ontology/PopulatedPlace
+http://dbpedia.org/class/yago/AdministrativeDistrict108491826
+http://dbpedia.org/class/yago/Country108544813
+http://dbpedia.org/class/yago/District108552138
+http://dbpedia.org/class/yago/Location100027167
+http://umbel.org/umbel/rc/Country
+http://umbel.org/umbel/rc/Location_Underspecified
+http://umbel.org/umbel/rc/PopulatedPlace
+all the distinct properties: 
+http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+http://www.w3.org/2000/01/rdf-schema#label
+http://www.w3.org/2000/01/rdf-schema#comment
+http://xmlns.com/foaf/0.1/name
+http://xmlns.com/foaf/0.1/homepage
+http://www.w3.org/2004/02/skos/core#exactMatch
+http://www.w3.org/2003/01/geo/wgs84_pos#lat
+http://www.w3.org/2003/01/geo/wgs84_pos#long
+http://xmlns.com/foaf/0.1/depiction
+http://xmlns.com/foaf/0.1/isPrimaryTopicOf
+http://www.w3.org/2003/01/geo/wgs84_pos#geometry
+http://dbpedia.org/ontology/thumbnail
+http://purl.org/dc/terms/subject
+http://dbpedia.org/ontology/wikiPageID
+http://dbpedia.org/ontology/wikiPageRevisionID
+http://dbpedia.org/ontology/wikiPageWikiLink
+http://dbpedia.org/ontology/wikiPageExternalLink
+http://www.w3.org/2002/07/owl#sameAs
+http://www.georss.org/georss/point
+http://dbpedia.org/property/wikiPageUsesTemplate
+http://dbpedia.org/property/align
+http://dbpedia.org/property/caption
+http://dbpedia.org/property/demonym
+http://dbpedia.org/property/establishedDate
+http://dbpedia.org/property/governmentType
+http://dbpedia.org/property/image
+http://dbpedia.org/property/imageFlag
+http://dbpedia.org/property/languages
+http://dbpedia.org/property/leaderName
+http://dbpedia.org/property/leaderTitle
+http://dbpedia.org/property/mapWidth
+http://dbpedia.org/property/nativeName
+http://dbpedia.org/property/populationDensityKm
+http://dbpedia.org/property/title
+http://dbpedia.org/property/utcOffset
+http://dbpedia.org/property/utcOffsetDst
+http://dbpedia.org/property/width
+http://dbpedia.org/ontology/currencyCode
+http://dbpedia.org/property/currency
+http://dbpedia.org/property/areaKm
+http://dbpedia.org/property/areaSqMi
+http://dbpedia.org/property/capital
+http://dbpedia.org/property/cctld
+http://dbpedia.org/property/conventionalLongName
+http://dbpedia.org/property/currencyCode
+http://dbpedia.org/property/drivesOn
+http://dbpedia.org/property/establishedEvent
+http://dbpedia.org/property/gdpNominal
+http://dbpedia.org/property/gdpNominalPerCapita
+http://dbpedia.org/property/gdpNominalPerCapitaRank
+http://dbpedia.org/property/gdpNominalRank
+http://dbpedia.org/property/gdpNominalYear
+http://dbpedia.org/property/gdpPpp
+http://dbpedia.org/property/gdpPppPerCapita
+http://dbpedia.org/property/gdpPppPerCapitaRank
+http://dbpedia.org/property/gdpPppRank
+http://dbpedia.org/property/gdpPppYear
+http://dbpedia.org/property/gini
+http://dbpedia.org/property/giniChange
+http://dbpedia.org/property/giniYear
+http://dbpedia.org/property/hdi
+http://dbpedia.org/property/hdiChange
+http://dbpedia.org/property/hdiRank
+http://dbpedia.org/property/hdiYear
+http://dbpedia.org/property/imageCoat
+http://dbpedia.org/property/languagesType
+http://dbpedia.org/property/largestCity
+http://dbpedia.org/property/lowerHouse
+http://dbpedia.org/property/nationalAnthem
+http://dbpedia.org/property/percentWater
+http://dbpedia.org/property/populationDensityRank
+http://dbpedia.org/property/populationDensitySqMi
+http://dbpedia.org/property/populationEstimate
+http://dbpedia.org/property/populationEstimateRank
+http://dbpedia.org/property/populationEstimateYear
+http://dbpedia.org/ontology/abstract
+http://dbpedia.org/property/timeZone
+http://dbpedia.org/ontology/humanDevelopmentIndex
+http://dbpedia.org/property/areaRank
+http://dbpedia.org/property/commonName
+http://dbpedia.org/ontology/area
+http://dbpedia.org/ontology/demonym
+http://dbpedia.org/ontology/populationDensity
+http://dbpedia.org/ontology/populationTotal
+http://dbpedia.org/ontology/populationTotalRanking
+http://dbpedia.org/ontology/utcOffset
+http://dbpedia.org/property/sovereigntyType
+http://dbpedia.org/property/timeZoneDst
+http://dbpedia.org/property/upperHouse
+http://dbpedia.org/ontology/event
+http://dbpedia.org/ontology/governmentType
+http://dbpedia.org/ontology/language
+http://dbpedia.org/ontology/leaderFunction
+http://dbpedia.org/ontology/timeZone
+http://dbpedia.org/ontology/house
+http://schema.org/sameAs
+http://dbpedia.org/ontology/anthem
+http://dbpedia.org/ontology/capital
+http://dbpedia.org/ontology/currency
+http://dbpedia.org/ontology/topLevelDomain
+http://purl.org/dc/terms/isPartOf
+http://dbpedia.org/ontology/giniCoefficient
+http://www.w3.org/ns/prov#wasDerivedFrom
+http://dbpedia.org/ontology/PopulatedPlace/area
+http://dbpedia.org/ontology/PopulatedPlace/populationDensity
+http://dbpedia.org/ontology/wikiPageLength
+
+</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</aside></div></section></section>
 </div>
 </div>
 </body>
